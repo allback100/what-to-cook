@@ -215,6 +215,9 @@ body.cooking .timers{z-index:40;bottom:110px}
 .bar-in{max-width:488px;margin:0 auto;display:flex;align-items:center;gap:12px}
 .bar-in p{margin:0;font-size:13px;color:var(--muted);flex:1;line-height:1.35}
 .bar-in p b{display:block;color:var(--ink);font-size:15px}
+.clearbtn{border:1.5px solid var(--line);background:var(--soft);border-radius:12px;padding:10px 10px;color:var(--ink);font-weight:700;font-size:12.5px;white-space:nowrap;flex:none}
+.clearbtn:active{filter:brightness(.95)}
+@media(max-width:340px){.bar-in{gap:8px}.clearbtn{padding:10px 8px;font-size:12px}.bar .cta{padding:14px 12px;font-size:15px}}
 .cta{border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:16px;padding:14px 20px;white-space:nowrap}
 .cta:disabled{opacity:.45;cursor:not-allowed}
 
@@ -1005,14 +1008,14 @@ function viewIngredients(){
     ${state.custom.length ? `<section class="group"><h3>직접 추가한 재료 <small>누르면 빠져요</small></h3><div class="tiles">${customChips}</div></section>` : ""}
     ${GROUPS.map(([g, items], gi) => `<section class="group" data-g="${gi}"><h3>${g} <small class="cnt">${items.filter(n=>state.sel.includes(n)).length}/${items.length}${g==="기본 양념"?" · 흔한 양념은 미리 체크했어요":""}</small></h3>
       <div class="tiles">${items.map(tile).join("")}</div></section>`).join("")}
-    <p class="empty" id="noHit" hidden></p>
-    <button type="button" class="textbtn" id="clear">고른 재료 모두 지우기</button>`;
+    <p class="empty" id="noHit" hidden></p>`;
   bar();
 }
 function bar(){
   const n = picked(), {ready, near} = ranked();
   $bar.hidden = false;
   $barIn.innerHTML = `<p><b>재료 ${n}개 선택</b>${n ? `바로 가능 ${ready.length}개 · 조금만 더 ${near.length}개` : "재료를 한 개 이상 골라 주세요"}</p>
+    ${n || state.custom.length ? `<button type="button" class="clearbtn" id="clear" aria-label="고른 재료 모두 지우기">모두 지우기</button>` : ""}
     <button type="button" class="cta" data-go="recipes" ${n?"":"disabled"}>요리 추천 받기</button>`;
 }
 
