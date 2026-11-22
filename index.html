@@ -6,7 +6,8 @@
 <title>냉장고 털기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gothic+A1:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gothic+A1:wght@400;500;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gothic+A1:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   /* 레이아웃: 휴대폰 폭 한 줄 앱. 냉장고 속처럼 차가운 바탕 위에 고추장 빨강 하나만 강조 */
@@ -101,7 +102,8 @@ h3 small{font-weight:500;color:var(--muted);font-size:13px}
 .topnav button b{background:var(--accent);color:var(--accent-ink);border-radius:999px;font-size:11px;min-width:18px;height:18px;line-height:18px;text-align:center;padding:0 5px}
 .topnav button[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .titlerow{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.favbtn{flex:none;border:1.5px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:800;margin-top:4px}
+.titlerow h2{min-width:0;flex:1 1 auto;overflow-wrap:anywhere}
+.favbtn{flex:none;white-space:nowrap;border:1.5px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:800;margin-top:4px}
 .favbtn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .made{font-size:13px;font-weight:700;color:var(--ok)}
 .favmark{position:absolute;top:8px;right:8px;z-index:2;width:28px;height:28px;border-radius:50%;background:var(--surface);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
@@ -117,6 +119,10 @@ button.row-s.shop.on{background:var(--accent);color:var(--accent-ink)}
 .row-n small{display:block;font-size:12px;font-weight:500;color:var(--muted)}
 .ghost{border:1.5px dashed var(--accent);background:transparent;color:var(--accent);border-radius:12px;padding:11px;font-weight:800;font-size:14px}
 .cta.wide{width:100%;margin-top:4px}
+h2.oneline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-wrap:nowrap}
+h2.oneline.wrap{white-space:normal;text-wrap:balance;overflow:visible}
+.rbtn{align-self:flex-start;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:13px;padding:7px 14px;white-space:nowrap}
+.rbtn:disabled{opacity:.6}
 .tbtn{display:inline-flex;align-items:center;gap:4px;margin:6px 0 0;border:1.5px solid var(--ink);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:13px;font-weight:800}
 ol.how li > span{display:flex;flex-direction:column;align-items:flex-start}
 .timers{position:fixed;left:0;right:0;bottom:16px;z-index:20;display:flex;flex-direction:column;gap:8px;align-items:center;padding:0 16px;pointer-events:none}
@@ -136,14 +142,17 @@ body.has-bar .timers{bottom:92px}
 .yt-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
 .yt-thumb i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38px;height:27px;border-radius:8px;background:var(--accent);z-index:2}
 .yt-thumb i::after{content:"";position:absolute;left:15px;top:7px;border-left:11px solid var(--accent-ink);border-top:6.5px solid transparent;border-bottom:6.5px solid transparent}
-.yt-t{display:flex;flex-direction:column;line-height:1.35;word-break:keep-all}
+.yt-t{display:flex;flex-direction:column;line-height:1.35;word-break:keep-all;overflow-wrap:anywhere;min-width:0;flex:1 1 0}
+.yt{min-width:0}
 .chk{position:relative;width:24px;height:24px;flex:none}
 .chk input{position:absolute;opacity:0;width:24px;height:24px;margin:0;cursor:pointer}
 .chk span{display:block;width:24px;height:24px;border:2px solid var(--muted);border-radius:7px}
 .chk input:checked + span{background:var(--ok);border-color:var(--ok)}
 .chk input:checked + span::after{content:"✓";color:#fff;font-weight:800;display:block;text-align:center;line-height:20px;font-size:14px}
 .chk input:focus-visible + span{outline:3px solid var(--yolk);outline-offset:2px}
-.block .ing.shop-l li.row{grid-template-columns:24px 36px minmax(0,1fr) auto}
+.block .ing.shop-l li.row{grid-template-columns:24px 36px minmax(0,1fr) auto auto}
+.cp{display:inline-block;min-width:42px;padding:3px 7px;font-size:11px;font-weight:800;text-align:center;white-space:nowrap;text-decoration:none;color:#fff;background:#E4002B;border-radius:6px}
+.cpnote{margin:10px 0 0;font-size:12px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
 .mthumb{display:block;width:36px;height:36px;border-radius:9px;overflow:hidden}
 .mthumb .art{aspect-ratio:1/1;height:100%}
 .linkish{border:0;background:none;padding:0;text-align:left;font-weight:700;font-size:15px}
@@ -165,9 +174,11 @@ body.has-bar .timers{bottom:92px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .subn{color:var(--yolk)}}
 .aln{display:block;font-size:12px;font-weight:700;color:var(--accent);margin-top:2px}
 .ing li.row.al .row-n{text-decoration:line-through;text-decoration-color:var(--accent)}
-.nut{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.nut div{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center}
-.nut b{font-family:var(--display);font-weight:400;font-size:22px;font-variant-numeric:tabular-nums}
+.nut{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.nut div{min-width:0;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center}
+.nut b{font-family:var(--display);font-weight:400;font-size:22px;font-variant-numeric:tabular-nums;max-width:100%;white-space:nowrap}
+@media(max-width:380px){.nut b{font-size:18px}}
+@media(max-width:330px){.nut b{font-size:16px}}
 .nut span{font-size:12px;color:var(--muted)}
 .nabar{height:8px;border-radius:4px;background:var(--soft);border:1px solid var(--line);overflow:hidden}
 .nabar i{display:block;height:100%;background:var(--accent)}
@@ -178,10 +189,13 @@ textarea:focus{border-color:var(--ink)}
 .days button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .planact{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
 .planact .ghost:disabled,.planact .cta:disabled{opacity:.45}
-.ing.plan .prow{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.planact .cta,.planact .ghost{white-space:normal;overflow-wrap:anywhere;line-height:1.3}
+.topnav button{flex-wrap:wrap;row-gap:0}
+.ing.plan .prow{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .ing.plan .prow:first-child{border-top:0}
 .pday{font-family:var(--display);font-weight:400;font-size:20px;color:var(--accent)}
 .pitems{display:flex;flex-wrap:wrap;gap:6px}
+.pitems>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
 .pchip{display:inline-flex;align-items:center;gap:2px;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px 4px 3px 11px}
 .pchip .linkish{font-size:14px}
 .px{border:0;background:none;width:24px;height:24px;border-radius:50%;font-weight:800;color:var(--muted)}
@@ -335,6 +349,9 @@ dl.keep dd b{display:inline-block;font-size:12px;background:var(--soft);border:1
 .gl b{font-variant-numeric:tabular-nums}.gl b.over,.nabar i.over{color:var(--accent)}
 .nabar i.over{background:var(--accent)}
 .randbox{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.spin{display:flex;align-items:center;justify-content:center;min-height:64px;border-radius:14px;border:2px solid var(--accent);background:var(--surface);padding:6px 12px;text-align:center;overflow:hidden}
+.spin span{font-weight:800;font-size:20px;line-height:1.25;overflow-wrap:anywhere;animation:spintick .14s ease-out}
+@keyframes spintick{from{transform:translateY(-16px);opacity:.25}to{transform:none;opacity:1}}
 .grid.one{grid-template-columns:1fr}
 /* 상단 메뉴: 폰에서도 한 줄, 칸 크기를 똑같이 맞춤 */
 .topnav{display:grid;grid-template-columns:repeat(auto-fit,minmax(42px,1fr));gap:5px;flex:1 1 100%;width:100%}
@@ -660,7 +677,7 @@ const R = [
  ["그릇에 요거트를 담아요.", "파인애플을 한입 크기로 썰어 올려요.", "바나나와 사과도 한입 크기로 썰어 함께 올려요.", "꿀 1큰술을 둘러요."],
  ["bowl", "#FFFFFF", [["cube", "#F4C542", 6], ["slice", "#F2D12E", 4]]]]
 ];
-const PHOTO = {"김치찌개": ["Korean_stew_dish_-_Kimchi-jjigae_Kimchi_Stew_2019_(01).jpg", "한국농수산식품유통공사", "KOGL Type 1"], "참치김치찌개": ["Korean_stew_dish_-_Kimchi-jjigae_Kimchi_Stew_2019_(01).jpg", "한국농수산식품유통공사", "KOGL Type 1"], "된장찌개": ["Doenjang-jjigae.jpg", "jyleen21", "CC0"], "계란말이": ["Gyeran-mari.jpg", "Hyeon-Jeong Suk", "CC BY 2.0"], "계란찜": ["Gyeranjjim.jpg", "letter001", "CC BY 2.5"], "김치볶음밥": ["Kimchi_fried_rice.jpg", "Sharon Ang", "CC0"], "버터간장계란밥": ["Ganjang-gyeran-bap_3.jpg", "건강한 레시피", "CC BY 4.0"], "제육볶음": ["제육_볶음.jpg", "메이", "CC BY-SA 1.0"], "소불고기": ["Bulgogi_2.jpg", "국립국어원", "CC BY-SA 2.0 KR"], "닭볶음탕": ["Korean.food-Dakbokemtang-01.jpg", "stuart_spivack", "CC BY-SA 2.0"], "감자조림": ["Gamja_jorim_Korean.jpg", "P1898", "CC BY 4.0"], "감자전": ["Korean_potato_pancake-Gamjajeon-02.jpg", "~Nisa (Flickr)", "CC BY-SA 2.0"], "두부조림": ["Dubu-jorim.jpg", "세미짱", "CC BY 4.0"], "떡볶이": ["Tteokbokki.JPG", "Popo le Chien", "CC0"], "라볶이": ["Ra-bokki.jpg", "farmtv", "CC BY 4.0"], "잔치국수": ["Janchi-guksu.jpg", "Chloe Lim", "CC BY 2.0"], "비빔국수": ["Bibim-guksu.jpg", "JeongHO Suh", "CC0"], "김치전": ["Kimchibuchimgae_(kimchi_pancake).jpg", "sharonang", "CC0"], "애호박전": ["Hobakjeon_(aehobak_jeon).jpg", "Ityoppyawit", "CC BY-SA 4.0"], "부대찌개": ["Budae_jjigae_(28587380901).jpg", "T.Tseng", "CC BY 2.0"], "어묵볶음": ["Eomuk-bokkeum_3.jpg", "Hyeon-Jeong Suk", "CC BY 2.0"], "콩나물국": ["콩나물국_-_Kongnamul_Guk_-_Bean_sprout_soup.jpg", "Korea Tourism Organization", "KOGL Type 1"], "콩나물무침": ["Kongnamul_muchim_(soybean_sprouts).jpg", "딸기맘양갱이", "CC BY-SA 2.5"], "소고기미역국": ["Miyeok-guk.jpg", "국립국어원", "CC BY-SA 2.0 KR"], "소고기뭇국": ["소고기뭇국_P20250603_115608479_EFEA4FCD-2382-45C6-811D-2C448C07FBC8.jpg", "Choikwangmo25", "CC0"], "카레라이스": ["Beef_curry_rice_003.jpg", "Ocdp", "CC0"], "오므라이스": ["Omurice_by_Taimeiken.jpg", "Kanesue", "CC BY 2.0"], "토마토달걀볶음": ["番茄炒蛋2.PNG", "三島堂", "CC BY-SA 4.0"], "알리오올리오": ["Aglio_e_olio.jpg", "", "CC BY-SA 2.0"]};
+const PHOTO = {"김치찌개": ["Korean_stew_dish_-_Kimchi-jjigae_Kimchi_Stew_2019_(01).jpg", "한국농수산식품유통공사", "KOGL Type 1"], "참치김치찌개": ["Korean_stew_dish_-_Kimchi-jjigae_Kimchi_Stew_2019_(01).jpg", "한국농수산식품유통공사", "KOGL Type 1"], "된장찌개": ["Doenjang-jjigae.jpg", "jyleen21", "CC0"], "계란말이": ["Gyeran-mari.jpg", "Hyeon-Jeong Suk", "CC BY 2.0"], "계란찜": ["Gyeranjjim.jpg", "letter001", "CC BY 2.5"], "김치볶음밥": ["Kimchi_fried_rice.jpg", "Sharon Ang", "CC0"], "버터간장계란밥": ["Ganjang-gyeran-bap_3.jpg", "건강한 레시피", "CC BY 4.0"], "제육볶음": ["제육_볶음.jpg", "메이", "CC BY-SA 1.0"], "소불고기": ["Bulgogi_2.jpg", "국립국어원", "CC BY-SA 2.0 KR"], "닭볶음탕": ["Korean.food-Dakbokemtang-01.jpg", "stuart_spivack", "CC BY-SA 2.0"], "감자조림": ["Gamja_jorim_Korean.jpg", "P1898", "CC BY 4.0"], "감자전": ["Korean_potato_pancake-Gamjajeon-02.jpg", "~Nisa (Flickr)", "CC BY-SA 2.0"], "두부조림": ["Dubu-jorim.jpg", "세미짱", "CC BY 4.0"], "떡볶이": ["Tteokbokki.JPG", "Popo le Chien", "CC0"], "라볶이": ["Ra-bokki.jpg", "farmtv", "CC BY 4.0"], "잔치국수": ["Janchi-guksu.jpg", "Chloe Lim", "CC BY 2.0"], "비빔국수": ["Bibim-guksu.jpg", "JeongHO Suh", "CC0"], "김치전": ["Kimchibuchimgae_(kimchi_pancake).jpg", "sharonang", "CC0"], "애호박전": ["Hobakjeon_(aehobak_jeon).jpg", "Ityoppyawit", "CC BY-SA 4.0"], "부대찌개": ["Budae_jjigae_(28587380901).jpg", "T.Tseng", "CC BY 2.0"], "어묵볶음": ["Eomuk-bokkeum_3.jpg", "Hyeon-Jeong Suk", "CC BY 2.0"], "콩나물국": ["콩나물국_-_Kongnamul_Guk_-_Bean_sprout_soup.jpg", "Korea Tourism Organization", "KOGL Type 1"], "콩나물무침": ["Kongnamul_muchim_(soybean_sprouts).jpg", "딸기맘양갱이", "CC BY-SA 2.5"], "소고기미역국": ["Miyeok-guk.jpg", "국립국어원", "CC BY-SA 2.0 KR"], "소고기뭇국": ["소고기뭇국_P20250603_115608479_EFEA4FCD-2382-45C6-811D-2C448C07FBC8.jpg", "Choikwangmo25", "CC0"], "카레라이스": ["Beef_curry_rice_003.jpg", "Ocdp", "CC0"], "오므라이스": ["Omurice_by_Taimeiken.jpg", "Kanesue", "CC BY 2.0"], "토마토달걀볶음": ["番茄炒蛋2.PNG", "三島堂", "CC BY-SA 4.0"], "알리오올리오": ["Aglio_e_olio.jpg", "matsuyuki (원본), Jbarta (수정)", "CC BY-SA 2.0"], "잡채": ["Korean_cuisine-Japchae-04.jpg", "Alan Chan", "CC BY-SA 2.0"], "순두부찌개": ["Korean_stew-Sundubu_jjigae-01.jpg", "yummiec00kies", "CC BY 2.0"], "돈가스": ["Dongaseu.jpg", "crocodelicacy", "CC0"], "소시지야채볶음": ["Stir-Fried Cabbage and Mixed Vegetables with Sliced Sausages.jpg", "Uthman salma", "CC0"], "계란볶음밥": ["Egg Fried Rice.jpg", "Gaurav Dhwaj Khadka", "CC BY-SA 4.0"], "레몬꿀차": ["Honey Lemon Tea.jpg", "Muralikrishna m", "CC BY 4.0"], "버섯볶음": ["Mangadakbeoseot-bokkeum 1.jpg", "Yujeo", "CC BY-SA 4.0"], "크림파스타": ["Lemon cream pasta (3056103239).jpg", "Karen and Brad Emerson", "CC BY 2.0"], "감자당근죽": ["Korean rice porridge Vegetable juk.jpg", "Mar del Este", "CC BY-SA 4.0"], "닭고기무죽": ["Dakjuk.jpg", "국립국어원", "CC BY-SA 2.0 kr"], "아기주먹밥": ["Jumeok-bap.jpg", "Chloe Lim", "CC BY 2.0"], "시금치나물": ["Sigeumchi-namul 2.jpg", "Hyeon-Jeong Suk", "CC BY 2.0"], "오이무침": ["Oi Muchim 오이무침1.jpg", "Valenzuela400", "CC BY-SA 4.0"], "고구마맛탕": ["Goguma-mattang.jpg", "행복한 초록개구리", "CC BY 4.0"], "새우브로콜리볶음": ["Shrimp and broccoli stir fry (8374790146).jpg", "jeffreyw", "CC BY 2.0"], "오징어볶음": ["Ojingeo-bokkeum 1.jpg", "lazy fri13th", "CC BY 2.0"], "고등어조림": ["Godeungeo-jorim.jpg", "쑤기언니", "CC BY 4.0"], "부추전": ["Buchujeon(garlic chive pancake).jpg", "akdrhWkd", "CC0"], "만두국": ["Korean.cuisine-Manduguk-01.jpg", "avlxyz", "CC BY-SA 2.0"], "프렌치토스트": ["French toast 001.jpg", "Ocdp", "CC0"], "멸치볶음": ["Myeolchi-bokkeum.jpg", "행복한 초록개구리", "CC BY 4.0"], "부추무침": ["Buchu-muchim.jpg", "donza", "CC BY 4.0"], "계란샌드위치": ["Egg Sandwich.jpg", "David Gossow", "CC BY-SA 4.0"], "계란국": ["Chinese gyeran-tang.jpg", "OLSO OLSO", "CC BY 4.0"], "깻잎전": ["Kkaennipjeon (perilla).jpg", "Hyeon-Jeong Suk", "CC BY 2.0"], "가지볶음": ["Gaji-bokkeum.jpg", "Hyeon-Jeong Suk", "CC BY 2.0"], "단호박샐러드": ["Danhobak salad (kabocha squash salad).jpg", "방신애", "CC BY 4.0"], "돼지고기생강구이": ["Shogayaki 002.jpg", "Ocdp", "CC0"], "콘치즈": ["Corn cheese.jpg", "anokarina", "CC BY-SA 2.0"], "바지락칼국수": ["Bajirak-kalguksu.jpg", "Suh Jeong-ho", "CC0"], "황태해장국": ["Hwangtae-haejang-guk.jpg", "Jinho Jung", "CC BY-SA 2.0"], "과일요거트볼": ["Yogurt fruit bowl.jpg", "Jumbocombo0811", "CC BY-SA 4.0"], "버섯크림수프": ["Cream of mushroom soup.jpg", "MichalPL", "CC BY-SA 4.0"], "온우동": ["Kake udon by udono.jpg", "udono", "CC BY 2.0"], "볶음우동": ["Yaki-udon.jpg", "Blue Lotus", "CC BY 2.0"], "또띠아피자": ["Tortilla pizza.jpg", "jeffreyw", "CC BY 2.0"], "바나나팬케이크": ["Banana Pancakes Pk021.jpg", "PallaviKhale", "CC BY-SA 4.0"], "파인애플볶음밥": ["Thai-style Fried Rice in Pineapple.jpg", "Ceeseven", "CC BY-SA 3.0"], "숙주나물": ["Sukjunamul-muchim.jpg", "Eugene Kim", "CC BY 2.0"], "파인애플요거트볼": ["Yoghurt, Granola, Dried Pineapples and Coconut.jpg", "Afimaame", "CC BY-SA 4.0"], "돼지고기파인애플볶음": ["HK SWH 西灣河 Sai Wan Ho SKW 筲箕灣道 33 Shau Kei Wan Road shop 麗灣大廈 Lai Wan Building 海寶漁港 Ocean Treasure Seafood Restaurant diner food stir-fly 肉片 pork n pineapple 青椒 green pepper March 2026 N13P 03.jpg", "TOMW maowu LOU ShaSha", "CC0"], "배춧국": ["", "makafood", "Pexels License", {"u": "https://images.pexels.com/photos/8956664/pexels-photo-8956664.jpeg?auto=compress&cs=tinysrgb&w=640", "s": "https://www.pexels.com/photo/a-bowl-of-soup-with-fish-meat-and-vegetables-8956664/", "n": "Pexels"}], "깍두기볶음밥": ["", "makafood", "Pexels License", {"u": "https://images.pexels.com/photos/8890016/pexels-photo-8890016.jpeg?auto=compress&cs=tinysrgb&w=640", "s": "https://www.pexels.com/photo/close-up-of-a-meal-8890016/", "n": "Pexels"}], "두부강정": ["", "neilstha firman", "Pexels License", {"u": "https://images.pexels.com/photos/36010457/pexels-photo-36010457.jpeg?auto=compress&cs=tinysrgb&w=640", "s": "https://www.pexels.com/photo/appetizing-fried-tofu-with-red-chili-peppers-36010457/", "n": "Pexels"}], "소고기애호박죽": ["", "FOX ^.ᆽ.^= ∫", "Pexels License", {"u": "https://images.pexels.com/photos/32835478/pexels-photo-32835478.jpeg?auto=compress&cs=tinysrgb&w=640", "s": "https://www.pexels.com/photo/delicious-homemade-rice-porridge-in-ceramic-bowl-32835478/", "n": "Pexels"}]};
 const AMT = {"소고기애호박죽": {"밥": "1/2공기(100g)", "소고기": "30g(안심)", "애호박": "1/6개(30g)", "물": "400ml"}, "감자당근죽": {"밥": "1/2공기(100g)", "감자": "1/4개(40g)", "당근": "1/8개(20g)", "물": "400ml"}, "닭고기무죽": {"밥": "1/2공기(100g)", "닭고기": "30g(안심)", "무": "30g", "물": "400ml(삶은 물)"}, "아기주먹밥": {"밥": "1공기", "김": "1장", "계란": "1개", "당근": "2큰술(다진 것)", "참기름": "1/2작은술"}, "김치찌개": {"김치": "1.5컵(300g)", "돼지고기": "150g", "두부": "1/2모(150g)", "양파": "1/2개", "대파": "1/2대", "고춧가루": "1큰술", "간장": "1큰술", "설탕": "1/2작은술", "물": "500ml"}, "참치김치찌개": {"김치": "1.5컵(300g)", "참치캔": "1캔(150g)", "두부": "1/2모(150g)", "양파": "1/2개", "대파": "1/2대", "고춧가루": "1큰술", "간장": "1/2큰술", "물": "450ml"}, "된장찌개": {"두부": "1/2모(150g)", "애호박": "1/3개", "양파": "1/4개", "감자": "1/2개", "버섯": "한 줌(50g)", "청양고추": "1개", "대파": "1/3대", "된장": "2큰술", "고춧가루": "1/2큰술", "물": "500ml"}, "계란말이": {"계란": "4개", "대파": "2큰술(다진 것)", "당근": "2큰술(다진 것)", "소금": "2꼬집", "식용유": "1작은술"}, "계란찜": {"계란": "3개", "대파": "1큰술(송송 썬 것)", "소금": "1/2작은술", "참기름": "3~4방울", "물": "150ml"}, "김치볶음밥": {"김치": "1컵(200g)", "밥": "2공기", "계란": "2개", "스팸": "1/2캔(100g)", "대파": "1/2대", "김": "1장", "간장": "1/2큰술", "고추장": "1/2큰술", "참기름": "1큰술", "식용유": "2큰술"}, "계란볶음밥": {"계란": "2개", "밥": "2공기", "대파": "1대", "당근": "1/4개", "양파": "1/4개", "간장": "1큰술", "소금": "약간", "후추": "약간", "식용유": "3큰술"}, "버터간장계란밥": {"계란": "2개", "밥": "2공기", "버터": "20g", "김": "1장", "간장": "2큰술", "참기름": "1작은술"}, "제육볶음": {"돼지고기": "400g(앞다리살)", "양파": "1/2개", "대파": "1/2대", "양배추": "2장", "당근": "1/4개", "청양고추": "1개", "고추장": "2큰술", "고춧가루": "1큰술", "간장": "1큰술", "설탕": "1큰술", "참기름": "1큰술"}, "소불고기": {"소고기": "300g(불고기용)", "양파": "1/2개", "대파": "1/2대", "버섯": "한 줌(50g)", "당근": "1/4개", "마늘": "3쪽(다진 것)", "간장": "3큰술", "설탕": "1.5큰술", "참기름": "1큰술", "후추": "약간"}, "닭볶음탕": {"닭고기": "1마리(1kg, 볶음탕용)", "감자": "2개", "양파": "1개", "당근": "1/2개", "대파": "1대", "청양고추": "2개", "고추장": "2큰술", "고춧가루": "2큰술", "간장": "3큰술", "설탕": "1큰술", "물": "600ml"}, "감자조림": {"감자": "2개(300g)", "양파": "1/2개", "당근": "1/4개", "간장": "3큰술", "설탕": "1큰술", "식용유": "1큰술", "참기름": "1작은술", "물": "150ml"}, "감자채볶음": {"감자": "2개(300g)", "양파": "1/4개", "당근": "1/4개", "소금": "1/2작은술", "후추": "약간", "식용유": "2큰술"}, "감자전": {"감자": "2개(큰 것)", "양파": "1/4개", "청양고추": "1개", "소금": "2꼬집", "식용유": "4큰술"}, "두부조림": {"두부": "1모(300g)", "대파": "1/2대", "양파": "1/4개", "청양고추": "1개", "간장": "3큰술", "고춧가루": "1큰술", "설탕": "1/2큰술", "참기름": "1작은술", "식용유": "2큰술", "물": "100ml"}, "떡볶이": {"떡볶이떡": "300g", "어묵": "2장", "대파": "1/2대", "계란": "2개(삶은 것)", "양배추": "2장", "고추장": "2큰술", "고춧가루": "1큰술", "설탕": "2큰술", "간장": "1큰술", "물": "400ml"}, "라볶이": {"라면": "1봉지", "떡볶이떡": "200g", "어묵": "2장", "대파": "1/2대", "계란": "1개(삶은 것)", "치즈": "1장", "고추장": "1.5큰술", "설탕": "1큰술", "물": "500ml"}, "잔치국수": {"소면": "200g", "애호박": "1/3개", "계란": "1개", "당근": "1/4개", "김": "1장", "대파": "1/3대", "간장": "2큰술", "소금": "1/2작은술", "참기름": "약간", "물": "800ml"}, "비빔국수": {"소면": "200g", "김치": "1/2컵(100g)", "계란": "1개(삶은 것)", "김": "1장", "고추장": "2큰술", "식초": "1.5큰술", "설탕": "1큰술", "참기름": "1큰술"}, "김치전": {"김치": "1컵(200g)", "부침가루": "1컵(100g)", "양파": "1/4개", "청양고추": "1개", "식용유": "4큰술", "물": "2/3컵(130ml)"}, "애호박전": {"애호박": "1개", "계란": "2개", "부침가루": "3큰술", "소금": "2꼬집", "식용유": "3큰술"}, "부대찌개": {"스팸": "1/2캔(100g)", "소시지": "4개", "김치": "1/2컵(100g)", "라면": "1/2봉지(사리)", "두부": "1/3모(100g)", "양파": "1/2개", "대파": "1/2대", "치즈": "1장", "고추장": "1큰술", "고춧가루": "2큰술", "간장": "1큰술", "물": "600ml"}, "참치마요덮밥": {"참치캔": "1캔(150g)", "밥": "2공기", "마요네즈": "3큰술", "계란": "2개", "김": "1장", "양파": "1/2개", "간장": "2큰술", "설탕": "1큰술"}, "어묵볶음": {"어묵": "4장", "양파": "1/4개", "당근": "1/4개", "청양고추": "1개", "간장": "1.5큰술", "설탕": "1/2큰술", "식용유": "1큰술", "참기름": "1작은술"}, "소시지야채볶음": {"소시지": "10개(200g)", "양파": "1/2개", "케첩": "3큰술", "당근": "1/4개", "양배추": "2장", "고추장": "1/2큰술", "설탕": "1/2큰술", "식용유": "1큰술"}, "콩나물국": {"콩나물": "200g", "대파": "1/3대", "청양고추": "1개", "마늘": "1쪽(다진 것)", "소금": "1/2작은술", "간장": "1/2큰술", "물": "700ml"}, "콩나물무침": {"콩나물": "200g", "대파": "1큰술(다진 것)", "마늘": "1쪽(다진 것)", "소금": "1/2작은술", "참기름": "1큰술", "고춧가루": "1/2큰술"}, "소고기미역국": {"미역": "10g(마른 것)", "소고기": "150g(국거리)", "마늘": "2쪽(다진 것)", "간장": "1큰술", "참기름": "1큰술", "소금": "약간", "물": "1L"}, "소고기뭇국": {"무": "1/4개(300g)", "소고기": "150g(국거리)", "대파": "1/2대", "마늘": "2쪽(다진 것)", "간장": "1큰술", "소금": "약간", "참기름": "1큰술", "물": "800ml"}, "카레라이스": {"카레가루": "1/2봉(50g)", "감자": "1개", "양파": "1개", "밥": "2공기", "당근": "1/3개", "돼지고기": "150g", "닭고기": "150g(돼지고기 대신)", "식용유": "1큰술", "물": "400ml"}, "오므라이스": {"계란": "4개", "밥": "2공기", "케첩": "4큰술(볶음 2 + 위에 2)", "양파": "1/4개", "당근": "1/4개", "소시지": "2개", "스팸": "1/4캔(소시지 대신)", "소금": "2꼬집", "식용유": "2큰술"}, "토마토달걀볶음": {"토마토": "2개", "계란": "3개", "대파": "1/3대", "소금": "1/2작은술", "설탕": "1/2작은술", "식용유": "2큰술"}, "버섯볶음": {"버섯": "200g", "양파": "1/4개", "대파": "1/3대", "간장": "1큰술", "소금": "약간", "식용유": "1큰술", "참기름": "1작은술"}, "알리오올리오": {"스파게티면": "200g", "마늘": "8쪽", "베이컨": "3줄", "청양고추": "2개", "식용유": "6큰술(올리브유 권장)", "소금": "1큰술(면 삶는 물) + 약간", "후추": "약간"}, "크림파스타": {"스파게티면": "200g", "우유": "300ml", "베이컨": "3줄", "버섯": "한 줌(50g)", "양파": "1/4개", "치즈": "2장", "버터": "10g", "소금": "약간", "후추": "약간"}, "시금치나물": {"시금치": "1단(200g)", "마늘": "1쪽(다진 것)", "대파": "1큰술(다진 것)", "간장": "1큰술", "참기름": "1큰술", "소금": "1꼬집", "물": "1L(데칠 물)"}, "오이무침": {"오이": "2개", "양파": "1/4개", "마늘": "1쪽(다진 것)", "대파": "1큰술(다진 것)", "고춧가루": "1큰술", "식초": "1큰술", "설탕": "1작은술", "소금": "1/2작은술", "참기름": "1작은술"}, "고구마맛탕": {"고구마": "2개(300g)", "설탕": "3큰술", "식용유": "4큰술", "물": "2큰술"}, "새우브로콜리볶음": {"새우": "10마리(200g)", "브로콜리": "1/2개", "파프리카": "1/2개", "마늘": "2쪽(다진 것)", "양파": "1/4개", "굴소스": "1큰술", "식용유": "1큰술", "후추": "약간"}, "오징어볶음": {"오징어": "2마리(몸통 400g)", "양파": "1개", "양배추": "2장", "대파": "1/2대", "청양고추": "1개", "당근": "1/4개", "고추장": "2큰술", "고춧가루": "1큰술", "간장": "1큰술", "설탕": "1큰술", "참기름": "1작은술", "식용유": "2큰술"}, "고등어조림": {"고등어": "1마리(2토막)", "무": "1/4개(300g)", "양파": "1/2개", "대파": "1/2대", "청양고추": "1개", "마늘": "1큰술(다진 것)", "고춧가루": "1.5큰술", "간장": "3큰술", "설탕": "1큰술", "물": "300ml"}, "잡채": {"당면": "200g", "양파": "1개", "당근": "1/2개", "시금치": "1/2단(100g)", "버섯": "한 줌(50g)", "소고기": "100g(잡채용)", "파프리카": "1/2개", "간장": "4큰술", "설탕": "2큰술", "참기름": "2큰술", "식용유": "3큰술", "소금": "약간", "물": "3큰술"}, "부추전": {"부추": "한 줌(100g)", "부침가루": "1컵(100g)", "양파": "1/4개", "청양고추": "1개", "계란": "1개", "소금": "1꼬집", "식용유": "3큰술", "물": "3/4컵(150ml)"}, "순두부찌개": {"순두부": "1봉(350g)", "돼지고기": "80g", "양파": "1/4개", "대파": "1/3대", "버섯": "한 줌(50g)", "계란": "1개", "마늘": "1쪽(다진 것)", "애호박": "1/6개", "고춧가루": "1큰술", "간장": "1큰술", "식용유": "2큰술", "소금": "약간", "물": "300ml"}, "만두국": {"만두": "8개", "계란": "1개", "대파": "1/3대", "김": "1/2장", "마늘": "1쪽(다진 것)", "양파": "1/4개", "간장": "1큰술", "소금": "약간", "참기름": "1/2작은술", "물": "600ml"}, "프렌치토스트": {"식빵": "4장", "계란": "2개", "우유": "100ml", "버터": "10g", "설탕": "1큰술", "소금": "1꼬집"}, "멸치볶음": {"멸치": "한 컵(50g)", "마늘": "2쪽(다진 것)", "청양고추": "1개", "간장": "1큰술", "설탕": "1큰술", "식용유": "1큰술", "참기름": "1작은술", "물": "2큰술"}, "양배추쌈밥": {"양배추": "6장", "밥": "2공기", "쌈장": "2큰술", "두부": "1/4모(75g)", "계란": "1개(삶은 것)", "대파": "1큰술(다진 것)", "참기름": "1작은술", "통깨": "1작은술"}, "부추무침": {"부추": "한 줌(100g)", "양파": "1/4개", "고춧가루": "1큰술", "액젓": "1큰술", "설탕": "1/2큰술", "참기름": "1큰술", "통깨": "1작은술"}, "계란샌드위치": {"식빵": "4장", "계란": "3개", "마요네즈": "3큰술", "양파": "1/4개(다진 것)", "머스타드": "1작은술", "소금": "약간", "설탕": "1/2작은술", "후추": "약간"}, "돈가스": {"돼지고기": "250g(등심 2장)", "빵가루": "1컵(60g)", "계란": "1개", "부침가루": "3큰술", "양배추": "2장", "돈가스소스": "4큰술", "소금": "약간", "후추": "약간", "식용유": "1컵(200ml)"}, "닭고기간장조림": {"닭고기": "400g(닭다리살)", "양파": "1/2개", "마늘": "2쪽(다진 것)", "대파": "1/2대", "청양고추": "1개", "간장": "4큰술", "맛술": "2큰술", "설탕": "1큰술", "올리고당": "1큰술", "물": "200ml"}, "계란국": {"계란": "2개", "대파": "1/3대", "양파": "1/4개", "소금": "1/2작은술", "간장": "1/2큰술", "참기름": "1/2작은술", "다시다": "1/2작은술", "후추": "약간", "물": "600ml"}, "배춧국": {"배추": "알배추 8장", "대파": "1/3대", "마늘": "1쪽(다진 것)", "두부": "1/4모(75g)", "멸치": "한 줌(10g)", "된장": "1.5큰술", "소금": "약간", "물": "700ml"}, "깻잎전": {"깻잎": "20장", "부침가루": "1/2컵(50g)", "계란": "2개", "돼지고기": "100g(다진 것)", "양파": "1/4개(다진 것)", "소금": "1꼬집", "식용유": "3큰술"}, "상추겉절이": {"상추": "한 봉지(200g)", "양파": "1/4개", "대파": "1큰술(송송 썬 것)", "고춧가루": "1큰술", "간장": "1큰술", "설탕": "1/2큰술", "식초": "1큰술", "참기름": "1큰술", "통깨": "1작은술"}, "가지볶음": {"가지": "2개", "양파": "1/2개", "대파": "1/3대", "마늘": "1쪽(다진 것)", "간장": "1.5큰술", "설탕": "1/2큰술", "식용유": "3큰술", "참기름": "1작은술"}, "단호박샐러드": {"단호박": "1/2개(300g)", "마요네즈": "3큰술", "양파": "1/4개", "옥수수": "3큰술", "요거트": "2큰술", "소금": "약간", "설탕": "1/2작은술", "후추": "약간"}, "숙주나물": {"숙주": "200g", "마늘": "1/2쪽(다진 것)", "대파": "1큰술(다진 것)", "소금": "1/2작은술", "참기름": "1큰술", "통깨": "1작은술"}, "돼지고기생강구이": {"돼지고기": "300g(불고기용)", "생강": "1/2톨(간 것)", "양파": "1/2개", "양배추": "2장", "간장": "3큰술", "맛술": "2큰술", "설탕": "1큰술", "식용유": "1큰술"}, "콘치즈": {"옥수수": "1컵(150g)", "치즈": "2장", "마요네즈": "2큰술", "양파": "1/4개", "버터": "10g", "설탕": "1큰술", "후추": "약간"}, "바지락칼국수": {"바지락": "500g", "칼국수면": "200g", "애호박": "1/3개", "양파": "1/4개", "대파": "1/3대", "마늘": "1쪽(다진 것)", "소금": "1/2작은술", "후추": "약간", "물": "1L"}, "게맛살전": {"게맛살": "6줄(100g)", "계란": "2개", "부침가루": "2큰술", "대파": "1/3대", "양파": "1/4개", "소금": "1꼬집", "식용유": "3큰술"}, "황태해장국": {"황태": "한 줌(30g)", "무": "100g", "콩나물": "한 줌(100g)", "두부": "1/4모(75g)", "대파": "1/3대", "계란": "1개", "마늘": "1쪽(다진 것)", "참기름": "1큰술", "소금": "약간", "간장": "1큰술", "물": "800ml"}, "과일요거트볼": {"요거트": "1컵(200g)", "바나나": "1개", "사과": "1/2개", "꿀": "1큰술"}, "버섯크림수프": {"버섯": "200g", "우유": "400ml", "생크림": "50ml", "양파": "1/2개", "버터": "10g", "소금": "1/2작은술", "후추": "약간"}, "온우동": {"우동면": "2인분(400g)", "쯔유": "4큰술", "대파": "1/3대", "계란": "1개", "어묵": "2장", "김": "1/2장", "물": "600ml"}, "볶음우동": {"우동면": "2인분(400g)", "양배추": "2장", "양파": "1/2개", "당근": "1/4개", "돼지고기": "100g", "계란": "1개(후라이)", "간장": "1큰술", "굴소스": "1큰술", "식용유": "1큰술", "후추": "약간"}, "또띠아피자": {"또띠아": "2장", "치즈": "4장", "케첩": "2큰술", "소시지": "2개", "양파": "1/4개", "토마토": "1/2개", "버섯": "30g", "후추": "약간"}, "깍두기볶음밥": {"깍두기": "1컵(150g)", "밥": "2공기", "계란": "2개", "대파": "1/3대", "양파": "1/4개", "참기름": "1큰술", "식용유": "1큰술"}, "두부강정": {"두부": "1모(300g)", "전분": "4큰술", "대파": "1큰술(다진 것)", "간장": "1큰술", "올리고당": "2큰술", "케첩": "2큰술", "식용유": "5큰술", "물": "3큰술"}, "들깨미역국": {"미역": "10g(마른 것)", "들깨가루": "3큰술", "소고기": "50g", "마늘": "1쪽(다진 것)", "참기름": "1큰술", "간장": "1큰술", "소금": "약간", "물": "700ml"}, "레몬꿀차": {"레몬": "1개", "꿀": "3큰술", "물": "200ml(뜨거운 물)"}, "바나나팬케이크": {"바나나": "2개", "계란": "1개", "부침가루": "1/2컵(50g)", "우유": "50ml", "버터": "10g", "꿀": "1큰술"}, "사과요거트샐러드": {"사과": "1개", "요거트": "4큰술", "양배추": "2장", "꿀": "1큰술", "소금": "1꼬집"}, "파인애플볶음밥": {"밥": "2공기(400g)", "파인애플": "1/4개(150g)", "계란": "2개", "새우": "8마리", "양파": "1/2개", "파프리카": "1/2개", "대파": "1/2대", "굴소스": "1큰술", "간장": "1작은술", "식용유": "1큰술", "후추": "약간"}, "돼지고기파인애플볶음": {"돼지고기": "300g", "파인애플": "1/4개(150g)", "양파": "1/2개", "파프리카": "1/2개", "당근": "1/4개", "케첩": "3큰술", "식초": "2큰술", "설탕": "2큰술", "간장": "1큰술", "전분": "3큰술", "식용유": "3큰술"}, "하와이안또띠아피자": {"또띠아": "2장", "파인애플": "1/8개(80g)", "치즈": "4장", "베이컨": "2줄", "양파": "1/4개", "파프리카": "1/4개", "케첩": "2큰술"}, "파인애플요거트볼": {"요거트": "1컵(200g)", "파인애플": "1/8개(80g)", "바나나": "1개", "사과": "1/2개", "꿀": "1큰술"}};
 const ICON = {"양파": ["bulb", "#E9C48A", "#B9874E"], "대파": ["stalk", "#F4F1E4", "#4E9A4A"], "마늘": ["bulb", "#F7F2E6", "#D8CBB0"], "감자": ["tuber", "#C99A5B", "#8A6236"], "당근": ["carrot", "#EE7A2B", "#4E9A4A"], "애호박": ["longveg", "#9BC46A", "#C9DE9C"], "양배추": ["cabbage", "#A9CF7A", "#6FA34B"], "버섯": ["mushroom", "#8A5A3A", "#F1E6D2"], "콩나물": ["sprout", "#F6F1DE", "#F2C94C"], "청양고추": ["chili", "#3E8E3A", "#2E6B2A"], "토마토": ["tomato", "#E5402E", "#3E8E3A"], "무": ["radish", "#F6F4EC", "#5FA34B"], "돼지고기": ["slab", "#F0A49A", "#FBE3DC"], "소고기": ["slab", "#B8382E", "#F3D2CC"], "닭고기": ["drumstick", "#E9B07A", "#FBF4E8"], "참치캔": ["can", "#2C6FB3", "#F2C94C"], "어묵": ["fishcake", "#E3B26A", "#C98D45"], "스팸": ["can", "#1E4D8C", "#E5402E"], "소시지": ["capsule", "#C9553A", "#E88A6A"], "베이컨": ["strip", "#C4473A", "#F6D9C9"], "미역": ["wave", "#2F5A3C", "#4F7F55"], "계란": ["egg", "#F3E2C3", "#FFFFFF"], "두부": ["cube", "#FBF8EF", "#E6E0CF"], "우유": ["carton", "#FFFFFF", "#3D7BD9"], "치즈": ["wedge", "#F4C542", "#E0A92A"], "버터": ["block", "#F7DC79", "#FFFFFF"], "밥": ["bowl", "#FFFFFF", "#5A6B65"], "라면": ["ramen", "#F0CF73", "#D5A93F"], "소면": ["bundle", "#F6EFDD", "#3D7BD9"], "스파게티면": ["bundle", "#EBCB7B", "#C4473A"], "떡볶이떡": ["tteok", "#FBF6EA", "#E6DCC5"], "부침가루": ["bag", "#F6EFDD", "#E5402E"], "김치": ["kimchi", "#D9472E", "#F6E3C6"], "김": ["sheet", "#1E2B23", "#3B5446"], "카레가루": ["bag", "#E2A72A", "#8A4A1E"], "케첩": ["bottle", "#D9302A", "#FFFFFF"], "마요네즈": ["bottle", "#F6EFD8", "#E5402E"], "간장": ["bottle", "#3A2418", "#E5402E"], "고추장": ["tub", "#B8301F", "#7A1E14"], "된장": ["tub", "#8A5A2E", "#5C3A1C"], "고춧가루": ["pile", "#C4301F", "#8E1F14"], "설탕": ["pile", "#FFFFFF", "#E6E0CF"], "소금": ["pile", "#F3F5F6", "#C9D2D6"], "참기름": ["bottle", "#B8742A", "#F2C94C"], "식용유": ["bottle", "#F2D35B", "#3E8E3A"], "식초": ["bottle", "#EAF2EE", "#3E8E3A"], "후추": ["grinder", "#3A3A3A", "#7A5A3A"], "시금치": ["stalk", "#E8A3A0", "#2F7A3A"], "오이": ["longveg", "#4E9A3A", "#9BCB7A"], "고구마": ["tuber", "#9A4A63", "#6E2F47"], "브로콜리": ["cabbage", "#4E9A4A", "#2F6F34"], "파프리카": ["tomato", "#E8452E", "#3E8E3A"], "부추": ["stalk", "#BFE0A0", "#3E8E3A"], "새우": ["capsule", "#F08A6A", "#F7C7B2"], "오징어": ["strip", "#F4EBE3", "#B9A0A0"], "고등어": ["slab", "#6E8CA6", "#DCE7EF"], "멸치": ["strip", "#B8C4CC", "#6E7F8A"], "순두부": ["cube", "#FFF7E0", "#F0E3BC"], "식빵": ["block", "#E9C589", "#F7E6C2"], "당면": ["bundle", "#D7D2D0", "#5A6B65"], "만두": ["tteok", "#FAF1DC", "#E3C98F"], "굴소스": ["bottle", "#4A2A1E", "#B8301F"], "맛술": ["bottle", "#EAF0E6", "#6E9A7A"], "올리고당": ["bottle", "#F2D9A0", "#C98D2E"], "통깨": ["pile", "#F3EBDD", "#B8A27A"], "다시다": ["bag", "#C9402A", "#F2C94C"], "쌈장": ["tub", "#9A5A2A", "#6E3A1C"], "액젓": ["bottle", "#C98A4A", "#7A4A1E"], "머스타드": ["bottle", "#F2C93A", "#E5A41A"], "돈가스소스": ["bottle", "#5A2A1E", "#D9302A"], "빵가루": ["bag", "#F0D49A", "#C98D45"], "배추": ["cabbage", "#CFE6A8", "#8FBF5A"], "깻잎": ["sheet", "#2F7A3A", "#1F5A2A"], "상추": ["cabbage", "#9BD47A", "#5FA34B"], "가지": ["longveg", "#5E3A7A", "#9A7AB0"], "단호박": ["tomato", "#E8A33A", "#3E6B3A"], "숙주": ["sprout", "#F6F6E8", "#CDE3A0"], "생강": ["tuber", "#E8CFA0", "#B8935A"], "옥수수": ["longveg", "#F2C94C", "#6FA34B"], "바지락": ["capsule", "#9A8A7A", "#D9CFC0"], "게맛살": ["strip", "#F6F0EA", "#E8603A"], "황태": ["strip", "#E3C48A", "#B8935A"], "요거트": ["tub", "#FFFFFF", "#E8604A"], "생크림": ["carton", "#FFF7E6", "#E8604A"], "우동면": ["bundle", "#F6EFDD", "#E8604A"], "칼국수면": ["bundle", "#F6F0E0", "#C4A86A"], "또띠아": ["tteok", "#F2E2BE", "#C9A96A"], "깍두기": ["kimchi", "#D9472E", "#F6E3C6"], "쯔유": ["bottle", "#8A4A1E", "#E8C46A"], "꿀": ["bottle", "#E8A81E", "#F8D77A"], "전분": ["pile", "#FFFFFF", "#E6E0CF"], "들깨가루": ["pile", "#9A8A5A", "#6E5E3A"], "사과": ["tomato", "#D9302A", "#3E8E3A"], "바나나": ["longveg", "#F2D12E", "#B8A21E"], "레몬": ["tomato", "#F2D12E", "#8FB84A"], "파인애플": ["pine", "#F2B632", "#3E8E3A"]};
 const AGE = {"김치찌개": [3, 4, 2], "참치김치찌개": [3, 4, 2], "된장찌개": [2, 4, 1], "계란말이": [1, 4, 0], "계란찜": [1, 4, 0], "김치볶음밥": [3, 4, 1], "계란볶음밥": [1, 4, 0], "버터간장계란밥": [1, 4, 0], "제육볶음": [3, 4, 2], "소불고기": [2, 4, 0], "닭볶음탕": [4, 4, 3], "감자조림": [1, 4, 0], "감자채볶음": [1, 4, 0], "감자전": [2, 4, 0], "두부조림": [3, 4, 1], "떡볶이": [3, 4, 2], "라볶이": [3, 4, 2], "잔치국수": [1, 4, 0], "비빔국수": [3, 4, 2], "김치전": [3, 4, 1], "애호박전": [1, 4, 0], "부대찌개": [4, 4, 2], "참치마요덮밥": [2, 4, 0], "어묵볶음": [2, 4, 0], "소시지야채볶음": [2, 4, 0], "콩나물국": [1, 4, 0], "콩나물무침": [2, 4, 1], "소고기미역국": [1, 4, 0], "소고기뭇국": [1, 4, 0], "카레라이스": [2, 4, 0], "오므라이스": [1, 4, 0], "토마토달걀볶음": [1, 4, 0], "버섯볶음": [2, 4, 0], "알리오올리오": [3, 4, 1], "크림파스타": [2, 4, 0], "소고기애호박죽": [0, 0, 0], "감자당근죽": [0, 0, 0], "닭고기무죽": [0, 0, 0], "아기주먹밥": [1, 2, 0], "시금치나물": [1, 4, 0], "오이무침": [2, 4, 1], "고구마맛탕": [1, 4, 0], "새우브로콜리볶음": [2, 4, 0], "오징어볶음": [3, 4, 2], "고등어조림": [3, 4, 2], "잡채": [1, 4, 0], "부추전": [1, 4, 0], "순두부찌개": [2, 4, 1], "만두국": [1, 4, 0], "프렌치토스트": [1, 4, 0], "멸치볶음": [2, 4, 0], "양배추쌈밥": [2, 4, 1], "부추무침": [2, 4, 1], "계란샌드위치": [1, 4, 0], "돈가스": [1, 4, 0], "닭고기간장조림": [2, 4, 0], "계란국": [1, 4, 0], "배춧국": [1, 4, 0], "깻잎전": [1, 4, 0], "상추겉절이": [2, 4, 1], "가지볶음": [1, 4, 0], "단호박샐러드": [1, 4, 0], "숙주나물": [1, 4, 0], "돼지고기생강구이": [2, 4, 0], "콘치즈": [1, 4, 0], "바지락칼국수": [2, 4, 0], "게맛살전": [1, 4, 0], "황태해장국": [2, 4, 0], "과일요거트볼": [1, 4, 0], "버섯크림수프": [1, 4, 0], "온우동": [1, 4, 0], "볶음우동": [1, 4, 0], "또띠아피자": [1, 4, 0], "깍두기볶음밥": [2, 4, 1], "두부강정": [1, 4, 0], "들깨미역국": [1, 4, 0], "레몬꿀차": [1, 4, 0], "바나나팬케이크": [1, 4, 0], "사과요거트샐러드": [1, 4, 0], "파인애플볶음밥": [1, 4, 0], "돼지고기파인애플볶음": [2, 4, 0], "하와이안또띠아피자": [1, 4, 0], "파인애플요거트볼": [1, 4, 0]};
@@ -781,6 +798,7 @@ const DEF_JSON = JSON.stringify(DEF);
 let state = Object.assign({ sel: [...SEASON, ...EXAMPLE], custom: [], fresh: true, age: 4 }, JSON.parse(DEF_JSON));
 // 저장된 값은 형식이 깨져 있을 수 있으니 항목마다 검사해서 쓸 수 있는 것만 살린다
 function clean(s){
+  try { const RN = {"달걀":"계란","요구르트":"요거트","토르티야":"또띠아","머스터드":"머스타드","프라이":"후라이"}; s = JSON.parse(JSON.stringify(s).replace(/달걀|요구르트|토르티야|머스터드|프라이/g, m => RN[m]).replace(/"햄"/g, '"스팸"')); } catch(e){}
   const isObj = v => v && typeof v === "object" && !Array.isArray(v);
   const strs = (v, ok) => Array.isArray(v) ? [...new Set(v.filter(x => typeof x === "string" && x && (!ok || ok(x))))] : [];
   const names = new Set(RECIPES.map(r => r.name));
@@ -890,7 +908,7 @@ const spice = (lv, big) => `<span class="spice${big?" big":""}" role="img" aria-
 const agePicker = () => `<div class="ages" role="radiogroup" aria-label="누가 먹나요">${AGES.map((a,i) => `<button type="button" role="radio" class="age" aria-checked="${state.age===i}" data-age="${i}"><b>${a[0]}</b><small>${a[1]}</small></button>`).join("")}</div>`;
 const ageForR = r => r.age[0] === r.age[1] ? AGES[r.age[0]][0] + "용" : (r.age[1] < 4 ? AGES[r.age[0]][0] + "~" + AGES[r.age[1]][0] : AGES[r.age[0]][0] + " 이상");
 const stars = d => `<span class="stars" role="img" aria-label="난이도 별 5개 중 ${d}개"><span class="st"><i style="width:${d*20}%">★★★★★</i>★★★★★</span><b>${d.toFixed(1)}</b></span>`;
-const cred = n => { const p = PHOTO[n]; if (!p) return ""; return `<p class="note cred">사진: ${p[1] ? esc(p[1]) + " · " : ""}${p[2]} · <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(p[0])}" target="_blank" rel="noopener">Wikimedia Commons</a></p>`; };
+const cred = n => { const p = PHOTO[n]; if (!p) return ""; const x = p[3]; const href = x ? x.s : `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(p[0])}`; const nm = x ? x.n : "Wikimedia Commons"; return `<p class="note cred">사진: ${p[1] ? esc(p[1]) + " · " : ""}${p[2] ? p[2] + " · " : ""}<a href="${esc(href)}" target="_blank" rel="noopener">${esc(nm)}</a></p>`; };
 const YV = {"김치찌개":["XVjFMlChQM8","김대석 셰프TV"],"참치김치찌개":["z3IQaaor0PY","자취요리신 simple cooking"],"된장찌개":["0MuBjsG-Jvg","곰쿡"],"계란말이":["YbkdB5WaIIo","딸을 위한 레시피 Recipes for daughters"],"계란찜":["nbH-Xhsod8M","풀씨의요리노트(pulssi's cook)"],"김치볶음밥":["2SA7i2pM_C8","꿀맛 알려주는 여자 꿀알녀"],"계란볶음밥":["kR77WlHRZrs","백종원 PAIK JONG WON"],"버터간장계란밥":["sOQYVRbXFyM","아미콩"],"제육볶음":["xgYAgpqQNSg","정호영의 오늘도 요리 Kitchen Caden"],"소불고기":["3Kov1Lhzv8o","JUNTV"],"닭볶음탕":["SANXKxaSKzA","87아빠"],"감자조림":["rDwyR7gkxvU","딸을 위한 레시피 Recipes for daughters"],"감자채볶음":["rFCUUXAqOlM","딸을 위한 레시피 Recipes for daughters"],"두부조림":["tjevDFeg408","전국집밥자랑"],"떡볶이":["y5gN9aRMZhc","간딴요리"],"라볶이":["HeIj9PXNIfM","KBS Entertain"],"비빔국수":["yiBvT475p2Y","하루한끼 one meal a day"],"김치전":["8wAllg5F6Zw","혀기요리 HYUK2YORI"],"애호박전":["dtUsQhzLCcA","추추의 한끼식사"],"부대찌개":["8tboG5KA3qs","KBS 한국방송"],"참치마요덮밥":["KcFPklUQkjY","냠냠간단요리-Yum Yum Easy Meal"],"어묵볶음":["K2U_2E6V4u4","정호영의 오늘도 요리 Kitchen Caden"],"소시지야채볶음":["FE-26VSGyy8","요리왕비룡 셰프TV"],"콩나물국":["Mi3JJL1oO2A","딸을 위한 레시피 Recipes for daughters"],"콩나물무침":["9f3C6PUgGDI","축복언니살림꿀팁"],"카레라이스":["TE6DPu-hxag","SBS Entertainment"],"오므라이스":["fp3R2sxMiDM","일식(食)예보"],"토마토달걀볶음":["B_xkOK6mLO8","comma_doma"],"버섯볶음":["bu61cgvbHP8","김진옥요리가좋다"],"크림파스타":["0Y6HiMq02fU","만원요리 최씨남매"],"소고기애호박죽":["F9iB6loRQj4","요린이TV"],"닭고기무죽":["0lxt6T0vq3U","커밍쑨여사"],"아기주먹밥":["elt8Uza68Bg","서소맘"],"시금치나물":["8o3vuM-8pGw","재연쿡 JYCOOK"],"오이무침":["pyGzMuslGQU","딸을 위한 레시피 Recipes for daughters"],"고구마맛탕":["O1lZIe84bOo","헬렌쿠킹 Helen Cooking"],"새우브로콜리볶음":["eXLEF7KefVM","홀썸모먼트 Wholesome Moment"],"오징어볶음":["yRj2DJVQ0GQ","딸을 위한 레시피 Recipes for daughters"],"고등어조림":["Zm1cYlOI9lA","KBS 한국방송"],"잡채":["OvIiITpRGt0","딸을 위한 레시피 Recipes for daughters"],"부추전":["Z2q-1zffE_8","첫째아들"],"순두부찌개":["XqDc3Ul9Fqk","MBN Entertainment"],"만두국":["ztTVYcJvdrg","성시경 SUNG SI KYUNG"],"프렌치토스트":["BS2yS1FcUnM","Leplat  르쁠라"],"멸치볶음":["Kwig1QzyHUA","양장금주부"],"양배추쌈밥":["b-EfvcyNNao","요리꽃피네 Cooking Blooms"],"계란샌드위치":["ZPXEboQG5jA","진주우주네 주말식당_Weekend restaurant"],"돈가스":["fl1i1qN1dm4","민히하우스"],"닭고기간장조림":["p4nzoF69THY","딸을 위한 레시피 Recipes for daughters"],"계란국":["pwBD7OIaeu8","엄마의손맛"],"배춧국":["4oRU-v5Niso","딸을 위한 레시피 Recipes for daughters"],"깻잎전":["yVAgNoMfmx8","소소황 Cook & Eat"],"상추겉절이":["v8KFcNKt6tM","엄마의손맛"],"가지볶음":["uRuCmmPv5r0","엄마의손맛"],"단호박샐러드":["PX6dwofWAcY","신나는셰프 김선영"],"숙주나물":["_8i_5AwiAcE","추추의 한끼식사"],"돼지고기생강구이":["r8bgcj_oy8c","성시경 SUNG SI KYUNG"],"콘치즈":["EM9qSYs_f6s","KBS Entertain"],"바지락칼국수":["Q3lVpGnvVyE","딸을 위한 레시피 Recipes for daughters"],"게맛살전":["Y3iig3RT6mI","여가네 / 여경래, 박은영 셰프님"],"황태해장국":["NlaIu6iSRtw","KBS Entertain"],"과일요거트볼":["q_z84ONKCM4","마리요리 (마리요리)"],"버섯크림수프":["iXm3x20aeGw","SBS Entertainment"],"온우동":["7PZcJcWXKaI","느린주방 Lazy kitchen"],"볶음우동":["mjl4pFQeCxE","소소황 Cook & Eat"],"또띠아피자":["SeThcDY2Rb4","지현쿡"],"깍두기볶음밥":["BjliMh3xios","하루한끼 one meal a day"],"들깨미역국":["DoZG2wgZdVM","EBS 최고의 요리비결"],"레몬꿀차":["iOZWCN2s5P0","쿠킹이즈 Maples cooking is"],"바나나팬케이크":["y8JwlONLf34","살뺄고양 : 살빠지는 레시피"],"감자전":["N82hJpl5cMM",""],"소고기미역국":["RFgCX6_Dtkw","첫째아들"],"부추무침":["nX7NijHjf-E","김대석 셰프TV"],"사과요거트샐러드":["LeaecF_CXRk","아이림"],"잔치국수":["3YMDDYHqLms",""],"알리오올리오":["cRc0Bu_dkZw",""],"소고기뭇국":["Iy2MhBCfkc0","EBS 최고의 요리비결"],"감자당근죽":["bNxh1hrlNXM","밥상매일"],"두부강정":["vW68aaYjfR0",""],"파인애플볶음밥":["U5mX2l8ORsk","순쿡"],"하와이안또띠아피자":["72BA7TEfBD0",""]};
 const RYV = {"shin":["rULfttCuExM",""],"jin":["P_2ESYaGDQk",""],"ansung":["I-SUWRQsocY",""],"yeol":["b6PB-2Ydrj4",""],"sam":["ndsXvvwMtwA","두율이네"],"sari":["zuIKEgBgEGg",""],"neoguri":["x5W6_dhMp-E",""],"odong":["wIdoLIQkdJI",""],"jjamppong":["YutBdQpYiOU",""],"jjapa":["VevNzd1Fy4M",""],"jjapaguri":["t26Qio0_neY",""],"buldak":["lx8IU4fGXYo",""],"yukgae":["0u2QYU0eYEM",""],"mupa":["3mpRRO8Xh5M",""],"snack":["vtaXuI-Wuew",""],"tuigim":["MG8SBeSJ7FA",""],"jinjjam":["fAg0HtvIhHY",""],"jjachelin":["24QR0kkF_k8","오뚜기"],"carbo":["h0mPYY1roZY","사월이네"]};
 const yt = q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
@@ -921,7 +939,7 @@ function art(spec, seedStr){
     }
   }
   const p = PHOTO[seedStr];
-  const img = p ? `<img alt="${esc(seedStr)} 사진" loading="lazy" referrerpolicy="no-referrer" src="https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(p[0])}?width=640" onerror="this.closest('.pic').classList.add('nophoto');this.remove()">` : "";
+  const img = p ? `<img alt="${esc(seedStr)} 사진" loading="lazy" referrerpolicy="no-referrer" src="${p[3] ? esc(p[3].u) : `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(p[0])}?width=640`}" onerror="this.closest('.pic').classList.add('nophoto');this.remove()">` : "";
   return `<span class="pic${p?"":" nophoto"}"><svg class="art" viewBox="0 0 200 140" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(seedStr)} 그림" style="background:color-mix(in srgb, ${base} 22%, var(--soft))">${body}${t}</svg>${img}</span>`;
 }
 
@@ -995,9 +1013,10 @@ function steps(cur){
 
 const tile = n => `<button type="button" class="tile" aria-pressed="${state.sel.includes(n)}" data-ing="${n}"><span class="tile-pic">${icon(n)}</span><span class="tile-n">${n}</span></button>`;
 const allergyPicker = () => `<div class="ages al">${Object.keys(ALLERGY).map(a => `<button type="button" class="age" aria-pressed="${state.allergy.includes(a)}" data-allergy="${a}"><b>${a}</b></button>`).join("")}</div>`;
+const gItems = k => k === "recent" ? state.recent : (GROUPS[+k] || [0, []])[1];
 function updateCounts(){
   document.querySelectorAll('section[data-g] .cnt').forEach(sm => { const gi = +sm.closest("section").dataset.g, g = GROUPS[gi]; sm.textContent = `${g[1].filter(x=>state.sel.includes(x)).length}/${g[1].length}` + (g[0]==="기본 양념" ? " · 흔한 양념은 미리 체크했어요" : ""); });
-  document.querySelectorAll('.gclr').forEach(bt => { bt.disabled = !GROUPS[+bt.dataset.gclr][1].some(x => state.sel.includes(x)); });
+  document.querySelectorAll('.gclr').forEach(bt => { bt.disabled = !gItems(bt.dataset.gclr).some(x => state.sel.includes(x)); });
 }
 function filterTiles(q){
   q = q.trim().replace(/\s+/g, "");
@@ -1025,11 +1044,10 @@ function viewIngredients(){
     <section class="group who"><h3>누가 먹나요? <small>나이에 맞는 요리만 추천해요</small></h3>${agePicker()}
       <h3>알레르기 있는 재료 <small>골라 두면 그 재료가 주재료인 요리는 빼요</small></h3>${allergyPicker()}</section>
     <form class="addform" id="addForm" autocomplete="off" role="search">
-      <input id="addInput" type="search" maxlength="12" placeholder="재료 검색 (예: 달걀, 삼겹살)" aria-label="재료 검색 또는 직접 추가">
+      <input id="addInput" type="search" maxlength="12" placeholder="재료 검색 (예: 계란, 삼겹살)" aria-label="재료 검색 또는 직접 추가">
       <button type="submit">추가</button>
     </form>
     <p class="hint" id="hint" aria-live="polite">찾는 재료가 목록에 없으면 '추가'를 누르세요.</p>
-    ${state.recent.length ? `<section class="group" data-g="recent"><h3>최근 고른 재료</h3><div class="tiles">${state.recent.map(tile).join("")}</div></section>` : ""}
     ${state.custom.length ? `<section class="group"><h3>직접 추가한 재료 <small>누르면 빠져요</small></h3><div class="tiles">${customChips}</div></section>` : ""}
     ${GROUPS.map(([g, items], gi) => `<section class="group" data-g="${gi}"><h3 class="gh"><span class="gt">${g}</span> <small class="cnt">${items.filter(n=>state.sel.includes(n)).length}/${items.length}${g==="기본 양념"?" · 흔한 양념은 미리 체크했어요":""}</small><button type="button" class="gclr" data-gclr="${gi}" ${items.some(n=>state.sel.includes(n))?"":"disabled"}>재료 선택해제</button></h3>
       <div class="tiles">${items.map(tile).join("")}</div></section>`).join("")}
@@ -1059,15 +1077,27 @@ function viewRecipes(){
   const unused = state.custom.filter(c => !RECIPES.some(r => [...r.main, ...r.opt, ...r.sea].some(n => c.length >= 2 ? (n.includes(c) || c.includes(n)) : n === c)));
   $view.innerHTML = `
     <button type="button" class="back" data-go="ingredients">← 재료 다시 고르기</button>
-    <h2>${ready.length ? `${state.age<4?AGES[state.age][0]+"에게 ":""}지금 바로 만들 수 있는 요리 ${ready.length}가지` : "딱 맞는 요리는 아직 없어요"}</h2>
+    <h2 class="oneline">${ready.length ? `${state.age<4?AGES[state.age][0]+"에게 ":""}지금 바로 만들 수 있는 요리 ${ready.length}가지` : "딱 맞는 요리는 아직 없어요"}</h2>
     <p class="lead">고른 재료: ${mine.length ? esc(mine.join(", ")) : "없음"}</p>
     ${unused.length ? `<div class="custnote">${unused.slice(0, 3).map(c => `<p><b>'${esc(c)}'</b> 요리는 아직 앱 레시피에 없어요. <a href="${yt(c + " 요리")}" target="_blank" rel="noopener">유튜브에서 '${esc(c)} 요리' 찾아보기</a></p>`).join("")}</div>` : ""}
-    ${ready.length ? `<div id="randBox" class="randbox"><button type="button" class="cta wide" data-rand="1">${randName ? "다시 뽑기" : "오늘 뭐 먹지? 랜덤 추천"}</button>${(() => { const m = randName && ready.find(x => (x.r ? x.r.name : x.name) === randName); return m ? `<p class="note">이 요리는 어때요?</p><div class="grid one">${card(m)}</div>` : ""; })()}</div>` : ""}
+    ${ready.length ? `<div id="randBox" class="randbox"><button type="button" class="rbtn" data-rand="1">${randName ? "다시 돌리기" : "오늘 뭐 먹지? 룰렛 돌리기"}</button>${(() => { const m = randName && ready.find(x => (x.r ? x.r.name : x.name) === randName); return m ? `<p class="note">이 요리는 어때요?</p><div class="grid one">${card(m)}</div>` : ""; })()}</div>` : ""}
     ${agePicker()}
     ${AGES[state.age][2] ? `<p class="agenote"><b>${AGES[state.age][0]} 팁</b> ${AGES[state.age][2]}</p>` : ""}
     ${ready.length ? `<div class="grid">${ready.map(card).join("")}</div>` : `<div class="empty">주재료가 모두 있는 요리를 찾지 못했어요. 재료를 더 고르거나, <a href="${yt(q)}" target="_blank" rel="noopener">유튜브에서 '${esc(q)}' 찾아보기</a>를 눌러 보세요.</div>`}
     ${near.length ? `<div class="sec"><h3>재료 한두 개만 더 있으면</h3><span class="meta">${near.length}가지</span></div><div class="grid">${near.map(card).join("")}</div>` : ""}`;
+  fitOne();
 }
+
+function fitOne(){
+  document.querySelectorAll("h2.oneline").forEach(el => {
+    el.style.fontSize = ""; el.classList.remove("wrap");
+    let fs = parseFloat(getComputedStyle(el).fontSize);
+    while (el.scrollWidth > el.clientWidth + 0.5 && fs > 11) { fs -= 0.5; el.style.fontSize = fs + "px"; }
+    if (el.scrollWidth > el.clientWidth + 0.5) { el.style.fontSize = "15px"; el.classList.add("wrap"); }
+  });
+}
+window.addEventListener("resize", fitOne);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitOne);
 
 function viewRecipe(id){
   const r = RECIPES.find(x => x.id === id); if (!r) return viewRecipes();
@@ -1529,13 +1559,18 @@ function viewMeal(){
       <p class="note">재료별 표준 영양값으로 계산한 대략적인 추정치예요. 칼로리·단백질·나트륨은 위 레시피의 영양 정보와 같고, 나머지는 실제와 다를 수 있어요. 요리별 공식 값(100g당)은 각 레시피 상세에서 볼 수 있어요.</p></section>` : `<div class="empty">선택한 요리가 없어요. 위에서 체크해 주세요.</div>`}` : ""}`;
 }
 
+/* 쿠팡 연결: CP_LINKS 에 재료명 -> 쿠팡 파트너스에서 만든 링크를 넣으면 그 링크로, 없으면 일반 쿠팡 검색으로 열려요. */
+const CP_LINKS = {};
+const cpUrl = n => CP_LINKS[n] || `https://www.coupang.com/np/search?q=${encodeURIComponent(n)}`;
+const cpHas = () => Object.keys(CP_LINKS).length > 0;
 function viewShop(){
   steps(-1); $bar.hidden = true;
   const items = state.shop;
   $view.innerHTML = `
     <h2>장보기 목록</h2>
     <p class="lead">${items.length ? "산 재료를 체크하고 냉장고에 넣어 주세요. 다음 추천부터 반영돼요." : "레시피의 '+ 담기'를 누르면 여기에 모여요."}</p>
-    ${items.length ? `<section class="block"><ul class="ing shop-l">${items.map((x,i) => `<li class="row"><label class="chk"><input type="checkbox" id="sh${i}" data-bought="${i}" ${x.b?"checked":""}><span></span></label>${icon(x.n)}<label for="sh${i}" class="row-n">${esc(x.n)}<small>${esc(x.from)}</small></label><button type="button" class="row-s shop on" data-unshop="${esc(x.n)}" aria-label="${esc(x.n)} 빼기">빼기</button></li>`).join("")}</ul>
+    ${items.length ? `<section class="block"><ul class="ing shop-l">${items.map((x,i) => `<li class="row"><label class="chk"><input type="checkbox" id="sh${i}" data-bought="${i}" ${x.b?"checked":""}><span></span></label>${icon(x.n)}<label for="sh${i}" class="row-n">${esc(x.n)}<small>${esc(x.from)}</small></label><a class="cp" href="${esc(cpUrl(x.n))}" target="_blank" rel="noopener noreferrer${CP_LINKS[x.n]?" sponsored":""}" aria-label="${esc(x.n)} 쿠팡에서 보기">쿠팡</a><button type="button" class="row-s shop on" data-unshop="${esc(x.n)}" aria-label="${esc(x.n)} 빼기">빼기</button></li>`).join("")}</ul>
+      ${cpHas() ? `<p class="cpnote">쿠팡 버튼은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>` : ""}
       <button type="button" class="cta wide" data-stock ${items.some(x=>x.b)?"":"disabled"}>산 재료 ${items.filter(x=>x.b).length}개 냉장고에 넣기</button>
       <button type="button" class="textbtn" data-shopclear>목록 비우기</button></section>` : `<div class="empty">아직 담은 재료가 없어요. <a href="#recipes">추천 요리 보러 가기</a></div>`}`;
 }
@@ -1688,6 +1723,43 @@ function route(){
 let lastHash = location.hash;
 window.addEventListener("hashchange", () => { route(); if (location.hash !== lastHash) window.scrollTo(0,0); lastHash = location.hash; });
 
+/* ---------- 오늘 뭐 먹지 룰렛 ---------- */
+let spinning = false;
+function spinRand(){
+  if (spinning) return;
+  const {ready} = ranked(); if (!ready.length) return;
+  const names = ready.map(m => m.r ? m.r.name : m.name);
+  const pool = names.filter(n => n !== randName), from = pool.length ? pool : names;
+  const target = from[Math.floor(Math.random() * from.length)];
+  const finish = () => { randName = target; if (location.hash.replace("#","") === "recipes") { viewRecipes(); const bx = document.getElementById("randBox"); if (bx) bx.scrollIntoView({ block: "center" }); } };
+  let reduce = false; try { reduce = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch(e){}
+  const bx = document.getElementById("randBox"), btn = bx && bx.querySelector("[data-rand]");
+  if (!bx || !btn || reduce || names.length < 2) { finish(); return; }
+  const old = bx.querySelector(".spin"); if (old) old.remove();
+  const box = document.createElement("div"); box.className = "spin"; box.setAttribute("aria-hidden", "true");
+  btn.after(box); btn.disabled = true; spinning = true;
+  const seq = []; let last = "";
+  for (let i = 0; i < 14; i++) { let n; do { n = names[Math.floor(Math.random() * names.length)]; } while (n === last || n === target); seq.push(n); last = n; }
+  seq.push(target);
+  let i = 0;
+  const step = () => {
+    if (!box.isConnected) { spinning = false; return; }
+    box.innerHTML = "<span>" + esc(seq[i]) + "</span>";
+    if (i === seq.length - 1) { setTimeout(() => { spinning = false; finish(); }, 450); return; }
+    const wait = 70 + Math.pow(i / (seq.length - 1), 2) * 260;
+    i++; setTimeout(step, wait);
+  };
+  step();
+}
+
+/* 이전에 설치된 서비스워커·저장본이 있으면 정리 */
+try {
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) window.addEventListener("load", () => {
+    navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
+    if (window.caches) caches.keys().then(ks => ks.filter(k => k.startsWith("naengteol-sw")).forEach(k => caches.delete(k))).catch(() => {});
+  });
+} catch(e){}
+
 document.addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.dataset.ing){
@@ -1713,10 +1785,7 @@ document.addEventListener("click", e => {
   } else if (b.dataset.goal !== undefined){
     state.goal = Math.min(4000, Math.max(1000, state.goal + Number(b.dataset.goal))); save(); viewSettings();
   } else if (b.dataset.rand !== undefined){
-    const {ready} = ranked(); const pool = ready.filter(m => m.r ? m.r.name !== randName : m.name !== randName);
-    const pick = (pool.length ? pool : ready)[Math.floor(Math.random() * (pool.length ? pool.length : ready.length))];
-    if (pick) randName = pick.r ? pick.r.name : pick.name;
-    viewRecipes(); const bx = document.getElementById("randBox"); if (bx) bx.scrollIntoView({ block: "center" });
+    spinRand();
   } else if (b.dataset.mealadd !== undefined){
     const n = b.dataset.mealadd;
     if (!state.meal.some(m => m.n === n) && state.meal.length < 12) { state.meal.push({ n, p: 1, on: true }); save(); }
@@ -1783,7 +1852,7 @@ document.addEventListener("click", e => {
   } else if (b.dataset.tclose){
     TIMERS = TIMERS.filter(x => String(x.id) !== b.dataset.tclose); renderTimers();
   } else if (b.dataset.gclr !== undefined){
-    const items = GROUPS[+b.dataset.gclr][1];
+    const items = gItems(b.dataset.gclr);
     state.sel = state.sel.filter(n => !items.includes(n)); state.fresh = false; save();
     document.querySelectorAll('.tile[data-ing]').forEach(t => { if (items.includes(t.dataset.ing)) t.setAttribute("aria-pressed", "false"); });
     document.querySelectorAll('.tile[data-ing]').forEach(t => t.setAttribute("aria-pressed", state.sel.includes(t.dataset.ing)));
