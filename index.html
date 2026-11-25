@@ -265,7 +265,7 @@ body.cooking .timers{z-index:40;bottom:110px}
 .pill{align-self:flex-start;font-size:12px;font-weight:800;border-radius:999px;padding:3px 9px;line-height:1.4}
 .pill.ok{background:var(--ok);color:var(--surface)}
 .pill.need{border:1.5px solid var(--accent);color:var(--accent)}
-.empty{background:var(--surface);border:1px dashed var(--muted);border-radius:16px;padding:18px;font-size:15px}
+.empty{background:var(--surface);border:1px dashed var(--muted);border-radius:16px;padding:18px;font-size:15px}.empty a{display:inline-block;padding:8px 2px}
 .empty a{color:var(--accent);font-weight:700}
 .offn .offnm{display:block;font-style:normal;font-size:11px;color:var(--muted,#8a8a8a);margin:2px 0}
 .offn{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.045);display:grid;gap:2px;font-size:13.5px;line-height:1.45;word-break:keep-all}.offn b{font-size:12.5px}.offn small{opacity:.7;font-size:12px}
@@ -1874,6 +1874,8 @@ document.addEventListener("submit", e => {
   setTimeout(() => { const h = document.getElementById("hint"); if (h) h.textContent = msg; }, 0);
   document.getElementById("addInput").focus();
 });
+// 사용자가 입력한 이름(constructor, __proto__ 등)이 기본 속성과 겹치지 않도록 조회용 표의 프로토타입을 없앤다
+[PHOTO,AMT,ICON,AGE,SERV,SYN,SUB,ALLERGY,SEA_AL,NUT,OFF,KEEP,YV,RYV,ING,RROLE,RSTYLE,RCS,RCV,RNUT,RNOTE,RCOOK,RCOMBO,CP_LINKS].forEach(o => Object.setPrototypeOf(o, null));
 route();
 </script>
 </body>
