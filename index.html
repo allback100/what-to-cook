@@ -228,6 +228,9 @@ body.cooking .timers{z-index:40;bottom:110px}
 
 /* 아래 고정 바 */
 .bar{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+/* 앱(안드로이드 WebView) 안에서는 앱이 하단 여백을 이미 넣으므로 웹 쪽 안전 여백을 빼서 두 번 비지 않게 한다 */
+.inapp .bar{padding-bottom:10px}
+.inapp .cook{padding-bottom:16px}
 .bar-in{max-width:488px;margin:0 auto;display:flex;align-items:center;gap:12px}
 .bar-in p{margin:0;font-size:13px;color:var(--muted);flex:1;line-height:1.35}
 .bar-in p b{display:block;color:var(--ink);font-size:15px}
@@ -253,6 +256,10 @@ body.cooking .timers{z-index:40;bottom:110px}
 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--soft)}
 .hero:has(.pic.nophoto) .cred{display:none}
 .card .art{aspect-ratio:4/3}
+.pic.extph{background:var(--soft);display:grid;place-items:center;font-size:40px}
+.extsrc{font-size:12px;color:var(--muted)}
+.morebtn{display:block;margin:12px auto 0;padding:10px 18px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-weight:700}
+.extamt{white-space:pre-line;font-size:14px;line-height:1.6;margin:8px 0 0}
 .stars{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-variant-numeric:tabular-nums}
 .stars b{font-weight:700;color:var(--muted)}
 .st{position:relative;display:inline-block;color:var(--line);letter-spacing:1px;font-size:15px;line-height:1;white-space:nowrap}
@@ -410,6 +417,7 @@ html[data-fs="1"] .topnav,html[data-fs="2"] .topnav{grid-template-columns:repeat
 <div class="bar" id="bar" hidden><div class="bar-in" id="barIn"></div></div>
 
 <script>
+if (typeof navigator !== "undefined" && /; wv\)/.test(navigator.userAgent || "")) document.documentElement.classList.add("inapp");
 /* ---------- 데이터 ---------- */
 const GROUPS = [
   ["채소", ["양파","대파","마늘","감자","당근","애호박","양배추","버섯","콩나물","청양고추","토마토","무","시금치","오이","고구마","브로콜리","파프리카","부추","배추","깻잎","상추","가지","단호박","숙주","생강","옥수수"]],
@@ -1056,6 +1064,79 @@ function card(m){
   return `<button type="button" class="card" data-go="recipe-${r.id}">${state.fav.includes(r.name) ? `<span class="favmark" aria-label="즐겨찾기">♥</span>` : ""}${art(r.art, r.name)}
     <span class="card-b"><strong>${r.name}</strong><span class="meta">${r.min}분 · ${ageForR(r)}</span>${stars(r.level)}${spice(r.age[2])}${pill}</span></button>`;
 }
+// ── 식품안전나라 레시피(recipes.json): 앱 기본 레시피에 없는 재료도 찾을 수 있게 ──
+let EXT = null, extLoading = null, extShown = 12;
+function loadExt(){
+  if (EXT) return Promise.resolve(EXT);
+  if (location.protocol === "file:") { EXT = []; return Promise.resolve(EXT); }
+  if (!extLoading) extLoading = fetch("recipes.json", {cache: "no-cache"})
+    .then(r => r.ok ? r.json() : [])
+    .then(d => { EXT = (Array.isArray(d) ? d : []).filter(x => x && typeof x.n === "string" && Array.isArray(x.i) && Array.isArray(x.m) && Number.isFinite(x.s)); return EXT; })
+    .catch(() => { EXT = []; return EXT; });
+  return extLoading;
+}
+const normI = v => { const t = String(v).replace(/\s+/g, ""); return SYN[t] || t; };
+const iHit = (g, c) => c.length >= 2 ? (g.includes(c) || (g.length >= 2 && c.includes(g))) : g === c;
+function extMatches(){
+  if (!EXT || !EXT.length) return [];
+  const sel = state.sel.filter(n => !SEASON.includes(n)).map(normI), cus = state.custom.map(normI);
+  const mine = [...new Set([...sel, ...cus])];
+  if (!mine.length) return [];
+  const own = new Set(RECIPES.map(r => r.name));
+  return EXT.filter(x => !own.has(x.n)).map(x => {
+    const ings = x.i.map(normI);
+    const hit = c => ings.some(g => iHit(g, c)) || (c.length >= 2 && x.n.includes(c));
+    const got = mine.filter(hit), gotC = cus.filter(hit);
+    return {x, got, gotC: gotC.length, need: ings.filter(g => !mine.some(c => iHit(g, c))).length};
+  }).filter(m => m.got.length).sort((a, b) => b.gotC - a.gotC || b.got.length - a.got.length || a.need - b.need || a.x.s - b.x.s);
+}
+const extImg = x => x.p ? `<span class="art pic"><img src="${esc(x.p)}" alt="${esc(x.n)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('extph');this.parentNode.textContent='🍽'"></span>` : `<span class="art pic extph" aria-hidden="true">🍽</span>`;
+function extCard(m){
+  const x = m.x;
+  return `<button type="button" class="card" data-go="ext-${x.s}">${extImg(x)}
+    <span class="card-b"><strong>${esc(x.n)}</strong><span class="meta">${esc([x.t, x.w].filter(Boolean).join(" · ") || "식품안전나라 레시피")}</span><span class="pill ok">${esc(m.got.slice(0, 3).join(", "))}${m.got.length > 3 ? " 외" : ""} 사용</span></span></button>`;
+}
+function renderExt(){
+  const box = document.getElementById("extBox"); if (!box) return;
+  if (!EXT) { box.innerHTML = `<p class="note">더 많은 레시피를 찾는 중…</p>`; loadExt().then(() => { if (document.getElementById("extBox")) renderExt(); }); return; }
+  const list = extMatches();
+  document.querySelectorAll(".custnote p[data-c]").forEach(p => {
+    const c = normI(p.dataset.c), k = list.filter(m => m.x.i.map(normI).some(g => iHit(g, c)) || (c.length >= 2 && m.x.n.includes(c))).length;
+    if (k) p.innerHTML = `<b>'${esc(p.dataset.c)}'</b> 요리는 아래 <b>더 많은 레시피</b>에 ${k}가지 있어요.`;
+  });
+  if (!list.length) { box.innerHTML = ""; return; }
+  box.innerHTML = `<div class="sec"><h3>더 많은 레시피</h3><span class="meta">${list.length}가지</span></div>
+    <p class="extsrc">고른 재료가 들어간 식품안전나라 레시피예요. 직접 추가한 재료가 들어간 요리가 먼저 나와요.</p>
+    <div class="grid">${list.slice(0, extShown).map(extCard).join("")}</div>
+    ${list.length > extShown ? `<button type="button" class="morebtn" data-extmore="1">더 보기 (${list.length - extShown}가지 남음)</button>` : ""}
+    <p class="note cred">레시피·사진: 식품의약품안전처 식품안전나라 (공공데이터, 이용허락범위 제한 없음)</p>`;
+}
+function viewExt(seq){
+  steps(2); $bar.hidden = true;
+  const back = `<button type="button" class="back" data-go="recipes">← 추천 요리로 돌아가기</button>`;
+  if (!EXT) { $view.innerHTML = back + `<p class="note">레시피를 불러오는 중…</p>`; loadExt().then(() => { if (location.hash === "#ext-" + seq) viewExt(seq); }); return; }
+  const x = EXT.find(e => e.s === seq);
+  if (!x) { $view.innerHTML = back + `<div class="empty">레시피를 찾지 못했어요.</div>`; return; }
+  const haveI = n => has(normI(n)) || has(n);
+  const row = n => `<li class="row ${haveI(n) ? "have" : "miss"}">${icon(normI(n))}<span class="row-n">${esc(n)}</span><span class="row-a"></span>${haveI(n) ? `<span class="row-s">있음</span>` : inShop(n) ? `<button type="button" class="row-s shop on" data-unshop="${esc(n)}" aria-label="${esc(n)} 장보기에서 빼기">담음</button>` : `<button type="button" class="row-s shop" data-shop="${esc(n)}" data-from="${esc(x.n)}" aria-label="${esc(n)} 장보기에 담기">+ 담기</button>`}</li>`;
+  const k = Array.isArray(x.k) ? x.k : [];
+  const nOk = v => Number.isFinite(v);
+  $view.innerHTML = `${back}
+    <article>
+      <div class="hero">${extImg(x)}
+        <div class="hero-b"><div class="titlerow"><h2>${esc(x.n)}</h2></div>
+          <span class="meta">${esc([x.t, x.w].filter(Boolean).join(" · "))}</span>
+          <p class="note cred">레시피·사진: 식품의약품안전처 <a href="https://www.foodsafetykorea.go.kr/" target="_blank" rel="noopener">식품안전나라</a> · 공공데이터</p>
+        </div></div>
+      ${x.i.length ? `<section class="block"><h3>재료</h3><ul class="ing">${x.i.map(row).join("")}</ul>
+        ${x.d ? `<details><summary>분량 보기</summary><p class="extamt">${esc(x.d)}</p></details>` : ""}</section>` : ""}
+      ${nOk(k[0]) ? `<section class="block"><h3>영양 정보 <small>1인분 · 식품안전나라 제공값</small></h3>
+        <div class="nut"><div><b>${k[0]}</b><span>kcal</span></div>${nOk(k[2]) ? `<div><b>${k[2]}g</b><span>단백질</span></div>` : ""}${nOk(k[4]) ? `<div><b>${k[4].toLocaleString()}mg</b><span>나트륨</span></div>` : ""}</div></section>` : ""}
+      <section class="block"><h3>만드는 순서</h3>
+        <ol class="how">${x.m.map((st, i) => { const t = stepTime(st); return `<li><span>${esc(st)}${t ? `<button type="button" class="tbtn" data-timer="${t[0]}" data-label="${esc(x.n)} ${i+1}단계"><span aria-hidden="true">⏱</span> ${t[1]} 타이머</button>` : ""}</span></li>`; }).join("")}</ol>
+        <p class="note"><a href="${yt(x.n + " 레시피")}" target="_blank" rel="noopener">유튜브에서 '${esc(x.n)}' 영상 찾아보기</a></p></section>
+    </article>`;
+}
 function viewRecipes(){
   steps(1); $bar.hidden = true;
   const {ready, near} = ranked();
@@ -1067,12 +1148,14 @@ function viewRecipes(){
     <button type="button" class="back" data-go="ingredients">← 재료 다시 고르기</button>
     <h2 class="oneline">${ready.length ? `${state.age<4?AGES[state.age][0]+"에게 ":""}지금 바로 만들 수 있는 요리 ${ready.length}가지` : "딱 맞는 요리는 아직 없어요"}</h2>
     <p class="lead">고른 재료: ${mine.length ? esc(mine.join(", ")) : "없음"}</p>
-    ${unused.length ? `<div class="custnote">${unused.slice(0, 3).map(c => `<p><b>'${esc(c)}'</b> 요리는 아직 앱 레시피에 없어요. <a href="${yt(c + " 요리")}" target="_blank" rel="noopener">유튜브에서 '${esc(c)} 요리' 찾아보기</a></p>`).join("")}</div>` : ""}
+    ${unused.length ? `<div class="custnote">${unused.slice(0, 3).map(c => `<p data-c="${esc(c)}"><b>'${esc(c)}'</b> 요리는 아직 앱 레시피에 없어요. <a href="${yt(c + " 요리")}" target="_blank" rel="noopener">유튜브에서 '${esc(c)} 요리' 찾아보기</a></p>`).join("")}</div>` : ""}
     ${ready.length ? `<div id="randBox" class="randbox"><button type="button" class="rbtn" data-rand="1">${randName ? "다시 돌리기" : "오늘 뭐 먹지? 룰렛 돌리기"}</button>${(() => { const m = randName && ready.find(x => (x.r ? x.r.name : x.name) === randName); return m ? `<p class="note">이 요리는 어때요?</p><div class="grid one">${card(m)}</div>` : ""; })()}</div>` : ""}
     ${agePicker()}
     ${AGES[state.age][2] ? `<p class="agenote"><b>${AGES[state.age][0]} 팁</b> ${AGES[state.age][2]}</p>` : ""}
     ${ready.length ? `<div class="grid">${ready.map(card).join("")}</div>` : `<div class="empty">주재료가 모두 있는 요리를 찾지 못했어요. 재료를 더 고르거나, <a href="${yt(q)}" target="_blank" rel="noopener">유튜브에서 '${esc(q)}' 찾아보기</a>를 눌러 보세요.</div>`}
-    ${near.length ? `<div class="sec"><h3>재료 한두 개만 더 있으면</h3><span class="meta">${near.length}가지</span></div><div class="grid">${near.map(card).join("")}</div>` : ""}`;
+    ${near.length ? `<div class="sec"><h3>재료 한두 개만 더 있으면</h3><span class="meta">${near.length}가지</span></div><div class="grid">${near.map(card).join("")}</div>` : ""}
+    <div id="extBox"></div>`;
+  renderExt();
   fitOne();
 }
 
@@ -1705,6 +1788,7 @@ function route(){
   else if (h.startsWith("ramen-")) viewRamenDetail(h.slice(6));
   else if (h === "settings") viewSettings();
   else if (h.startsWith("recipe-")) viewRecipe(+h.slice(7));
+  else if (/^ext-\d+$/.test(h)) viewExt(+h.slice(4));
   else viewIngredients();
   nav(); renderTimers();
 }
@@ -1816,6 +1900,8 @@ document.addEventListener("click", e => {
     closeCook();
   } else if (b.dataset.serv){
     state.serv = +b.dataset.serv; save(); route();
+  } else if (b.dataset.extmore){
+    extShown += 24; renderExt();
   } else if (b.dataset.shop){
     if (!inShop(b.dataset.shop)) state.shop.push({n: b.dataset.shop, from: b.dataset.from || "", b: false}); save(); route();
   } else if (b.dataset.shopall){
