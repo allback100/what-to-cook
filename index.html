@@ -116,6 +116,7 @@ h3 small{font-weight:500;color:var(--muted);font-size:13px}
 .servs button[aria-checked="true"]{background:var(--ink);color:var(--bg)}
 .block .ing li.row{grid-template-columns:36px minmax(0,1fr) auto auto}
 .row-s{min-width:42px;padding:3px 7px!important;white-space:nowrap}
+button.row-s{min-height:30px;display:inline-flex;align-items:center;justify-content:center}   /* 화면에 맞춰 작게 줄여도 누르기 쉬운 크기 유지 */
 button.row-s.shop{background:transparent;color:var(--accent);border:1.5px solid var(--accent);font-size:11px;font-weight:800;border-radius:6px}
 button.row-s.shop.on{background:var(--accent);color:var(--accent-ink)}
 .row-n small{display:block;font-size:12px;font-weight:500;color:var(--muted)}
@@ -285,6 +286,7 @@ body.cooking .timers{z-index:40;bottom:110px}
 .clearbtn{border:1.5px solid var(--line);background:var(--soft);border-radius:12px;padding:10px 10px;color:var(--ink);font-weight:700;font-size:12.5px;line-height:1.25;white-space:nowrap;flex:none}
 .gclr{margin-left:auto;flex:none;border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:3px 9px;font-size:11.5px;font-weight:700;color:var(--ink);white-space:nowrap}
 .gclr:disabled{opacity:.4}
+.gclr{min-height:28px;display:inline-flex;align-items:center}
 .gbtns{margin-left:auto;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px 6px;max-width:100%}.gbtns .gclr{margin-left:0}
 .sortbar{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:4px 0 6px}
 .sortbar .sl{font-size:13px;font-weight:800;color:var(--muted)}
@@ -1168,7 +1170,7 @@ const KEEP = {
 
 /* ---------- 상태 ---------- */
 const LS = "naengteol-v1";
-const DEF = { serv: 2, shop: [], fav: [], log: {}, recent: [], allergy: [], alnone: false, dislike: [], tmax: 0, often: true, isort: "", iflat: false, bst: 2, memo: {}, plan: [[],[],[],[],[],[],[]], meal: [], ramen: [], rfav: [], rmemo: {}, theme: "auto", fs: 0, goal: 2000 };
+const DEF = { serv: 2, shop: [], fav: [], log: {}, recent: [], allergy: [], alnone: false, dislike: [], tmax: 0, often: true, isort: "", iflat: false, bst: 2, memo: {}, plan: [[],[],[],[],[],[],[]], meal: [], ramen: [], rfav: [], rmemo: {}, theme: "auto", fs: 0, fit: true, goal: 2000 };
 const DEF_JSON = JSON.stringify(DEF);
 let state = Object.assign({ sel: [...SEASON.filter(x => !RARE_SEA.includes(x)), ...EXAMPLE], custom: [], fresh: true, age: 4 }, JSON.parse(DEF_JSON));
 // 저장된 값은 형식이 깨져 있을 수 있으니 항목마다 검사해서 쓸 수 있는 것만 살린다
@@ -1188,7 +1190,7 @@ function clean(s){
     serv: [1,2,3,4].includes(s.serv) ? s.serv : 2,
     shop: [], fav: strs(s.fav, okName), log: {}, recent: strs(s.recent, x => KNOWN.includes(x)).slice(0, 8),
     allergy: strs(s.allergy, x => x in ALLERGY), alnone: s.alnone === true, dislike: strs(s.dislike).map(x => x.slice(0, 12)).slice(0, 30), tmax: [0, 15, 30, 60].includes(s.tmax) ? s.tmax : 0, often: s.often !== false, isort: ["asc", "desc"].includes(s.isort) ? s.isort : "", iflat: s.iflat === true, bst: [1, 2, 3, 4].includes(s.bst) ? s.bst : 2, memo: {}, plan: [[],[],[],[],[],[],[]], meal: [], ramen: strs(s.ramen, x => /^[a-z]{2,12}$/.test(x)).slice(0, 40), rfav: strs(s.rfav, x => /^[a-z]{2,12}$/.test(x)).slice(0, 40), rmemo: {},
-    theme: ["auto","light","dark"].includes(s.theme) ? s.theme : "auto", fs: [0,1,2].includes(s.fs) ? s.fs : 0,
+    theme: ["auto","light","dark"].includes(s.theme) ? s.theme : "auto", fs: [0,1,2].includes(s.fs) ? s.fs : 0, fit: s.fit !== false,
     goal: Number.isFinite(s.goal) ? Math.min(4000, Math.max(1000, Math.round(s.goal / 100) * 100)) : 2000 };
   if (Array.isArray(s.shop)) { const seen = new Set(); s.shop.forEach(x => { if (isObj(x) && typeof x.n === "string" && x.n && !seen.has(x.n)) { seen.add(x.n); out.shop.push({ n: x.n, from: typeof x.from === "string" ? x.from : "", b: !!x.b }); } }); }
   if (isObj(s.log)) for (const [k, v] of Object.entries(s.log)) { const d = strs(v, x => /^\d{4}-\d{2}-\d{2}$/.test(x) && !isNaN(Date.parse(x + "T00:00:00Z")) && new Date(x + "T00:00:00Z").toISOString().slice(0, 10) === x).sort(); /* 형식뿐 아니라 실제 있는 날짜만 */ if (okName(k) && d.length) out.log[k] = d; }
@@ -1216,7 +1218,18 @@ function sendTheme(){
     toApp({ type: "theme", dark, bg: "#" + m.slice(0, 3).map(v => Math.round(+v).toString(16).padStart(2, "0")).join("") });
   } catch(e){}
 }
-function applyDisplay(){ const d = document.documentElement; d.setAttribute("data-fs", state.fs); if (state.theme === "auto") d.removeAttribute("data-theme"); else d.setAttribute("data-theme", state.theme); d.style.zoom = ZOOM[state.fs] === 1 ? "" : ZOOM[state.fs]; sendTheme(); }
+function applyDisplay(){ const d = document.documentElement; d.setAttribute("data-fs", state.fs); if (state.theme === "auto") d.removeAttribute("data-theme"); else d.setAttribute("data-theme", state.theme); const z = Math.round(ZOOM[state.fs] * screenScale() * 100) / 100; d.style.zoom = z === 1 ? "" : z; d.setAttribute("data-sc", Math.round(screenScale() * 100)); sendTheme(); }
+/* 화면 크기에 맞춰 글자·버튼·사진을 함께 키우거나 줄인다: 폭 412px 휴대폰이 기준(1배), 좁으면 최소 0.9배, 태블릿처럼 넓으면 최대 1.3배.
+   가로로 눕힌 휴대폰은 높이가 낮으니 키우지 않는다. 설정에서 끌 수 있다 */
+function screenScale(){
+  if (!state.fit) return 1;
+  const sw = (window.screen && screen.width) || 1e4, sh = (window.screen && screen.height) || 1e4;
+  const w = Math.min(window.innerWidth || sw, sw), hgt = Math.min(window.innerHeight || sh, sh);
+  if (!w || !hgt) return 1;
+  return Math.max(0.9, Math.min(1.3, w / 412, hgt / 640));
+}
+let scW = 0;
+window.addEventListener("resize", () => { const v = Math.round(screenScale() * 100); if (v !== scW) { scW = v; applyDisplay(); } });
 try { const mq = window.matchMedia && matchMedia("(prefers-color-scheme: dark)"); if (mq) (mq.addEventListener ? mq.addEventListener("change", sendTheme) : mq.addListener(sendTheme)); } catch(e){}
 applyDisplay();
 function save(){ try{ const {fresh, ...keep} = state; localStorage.setItem(LS, JSON.stringify(keep)); }catch(e){} }
@@ -1970,7 +1983,7 @@ function fitPh(){
 let fitQ = 0;
 const fitSoon = () => { if (fitQ) return; fitQ = requestAnimationFrame(() => { fitQ = 0; fitText(); }); };
 try { new MutationObserver(fitSoon).observe(document.getElementById("view"), { childList: true, subtree: true }); } catch(e){}
-try { new MutationObserver(fitSoon).observe(document.documentElement, { attributes: true, attributeFilter: ["data-fs"] }); } catch(e){}
+try { new MutationObserver(fitSoon).observe(document.documentElement, { attributes: true, attributeFilter: ["data-fs", "data-sc", "style"] }); } catch(e){}
 try { new MutationObserver(fitSoon).observe(document.getElementById("topnav"), { childList: true, subtree: true }); new MutationObserver(fitSoon).observe(document.getElementById("barIn"), { childList: true, subtree: true }); new MutationObserver(fitSoon).observe(document.getElementById("steps"), { childList: true, subtree: true }); new MutationObserver(fitSoon).observe(document.getElementById("bar"), { attributes: true, attributeFilter: ["hidden"] }); } catch(e){}
 window.addEventListener("resize", fitSoon);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSoon);
@@ -2392,7 +2405,9 @@ function viewSettings(){
       <div class="optrow" role="radiogroup" aria-label="화면 색">${th.map(([k, l]) => `<button type="button" role="radio" aria-checked="${state.theme === k}" data-setth="${k}">${l}</button>`).join("")}</div></section>
     <section class="block"><h3>글자 크기</h3>
       <div class="optrow" role="radiogroup" aria-label="글자 크기">${fs.map((l, i) => `<button type="button" role="radio" aria-checked="${state.fs === i}" data-setfs="${i}">${l}</button>`).join("")}</div>
-      <p class="note">고른 크기가 앱 전체에 바로 적용돼요.</p></section>
+      <p class="note">고른 크기가 앱 전체에 바로 적용돼요.</p>
+      <label class="alnone oftenrow"><input type="checkbox" data-fit ${state.fit ? "checked" : ""}> 화면 크기에 맞춰 글자·버튼·사진 크기 자동 조절</label>
+      <p class="note">좁은 휴대폰에서는 조금 작게, 태블릿처럼 넓은 화면에서는 크게 보여줘요.</p></section>
     <section class="block"><h3>하루 목표 칼로리</h3>
       <div class="goalrow"><button type="button" data-goal="-100" aria-label="100 줄이기" ${state.goal <= 1000 ? "disabled" : ""}>−</button><b>${state.goal.toLocaleString()} kcal</b><button type="button" data-goal="100" aria-label="100 늘리기" ${state.goal >= 4000 ? "disabled" : ""}>＋</button></div>
       <p class="note">칼로리 계산기에서 목표 대비 얼마나 먹는지 보여줘요. 하루 나트륨 기준은 2,000mg이에요.</p></section>
@@ -2921,6 +2936,7 @@ document.addEventListener("change", e => {
   const mi = e.target.dataset && e.target.dataset.mon;
   if (mi !== undefined) { const m = state.meal[+mi]; if (m) { m.on = e.target.checked; save(); viewMeal(); nav(); } return; }
   if (e.target.hasAttribute && e.target.hasAttribute("data-often")) { state.often = e.target.checked; save(); return; }
+  if (e.target.hasAttribute && e.target.hasAttribute("data-fit")) { state.fit = e.target.checked; save(); applyDisplay(); return; }
   if (e.target.hasAttribute && e.target.hasAttribute("data-iflat")) { state.iflat = e.target.checked; save(); reIngredients(); return; }
   if (e.target.hasAttribute && e.target.hasAttribute("data-alnone")) {
     state.alnone = e.target.checked; save();
