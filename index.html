@@ -31,6 +31,8 @@
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+/* 한국어는 낱말 중간이 아니라 띄어쓰기에서 줄바꿈 (긴 영문·숫자만 넘칠 때 끊음) */
+body{word-break:keep-all;overflow-wrap:anywhere}
 button,input{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--yolk);outline-offset:2px}
@@ -282,6 +284,7 @@ body.cooking .timers{z-index:40;bottom:110px}
 .clearbtn{border:1.5px solid var(--line);background:var(--soft);border-radius:12px;padding:10px 10px;color:var(--ink);font-weight:700;font-size:12.5px;line-height:1.25;white-space:nowrap;flex:none}
 .gclr{margin-left:auto;flex:none;border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:3px 9px;font-size:11.5px;font-weight:700;color:var(--ink);white-space:nowrap}
 .gclr:disabled{opacity:.4}
+.gbtns{margin-left:auto;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px 6px;max-width:100%}.gbtns .gclr{margin-left:0}
 .sortbar{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:4px 0 6px}
 .sortbar .sl{font-size:13px;font-weight:800;color:var(--muted)}
 .sortbtns{display:flex;flex-wrap:wrap;gap:6px}
@@ -289,6 +292,9 @@ body.cooking .timers{z-index:40;bottom:110px}
 .sortbtns button small{font-size:11px;font-weight:600;opacity:.75}
 .sortbtns button[aria-checked="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .sortbar .flatchk{font-size:13px;padding:2px}
+.fitrow{flex-wrap:nowrap!important}.fitrow,.fitrow button,.fitrow b,.fitrow small,.fitrow label,.fitrow h3{white-space:nowrap}.fitrow h3{flex-wrap:nowrap}
+.fitrow.fitwrap{flex-wrap:wrap!important}.fitrow.fitwrap,.fitrow.fitwrap *{white-space:normal}
+.bar-in.fitrow p{min-width:0}.sortbtns.fitrow{max-width:100%;min-width:0;overflow:hidden}
 .gt small{font-size:12px;font-weight:600;color:var(--muted)}
 .bst{margin-top:10px}
 .bsth{margin:0 0 6px;font-weight:800;font-size:14px}
@@ -346,6 +352,10 @@ a.fbbtn{display:block;text-align:center;text-decoration:none}
 .stars{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-variant-numeric:tabular-nums}
 .stars b{font-weight:700;color:var(--muted)}
 @media(max-width:280px){.stars{gap:3px;font-size:12px}}
+/* 글자를 아주 크게 키운 경우에도 화면 밖으로 넘치지 않게 */
+.stars{max-width:100%;flex-wrap:wrap;row-gap:0}.stars .st{white-space:nowrap}
+.rbtn{max-width:100%;white-space:normal;text-align:left}
+html{overflow-x:hidden}
 .st{position:relative;display:inline-block;color:var(--dim);letter-spacing:1px;font-size:15px;line-height:1;white-space:nowrap}
 @supports (-webkit-text-stroke:1px #000){.st{color:transparent;-webkit-text-stroke:1.1px var(--dim)}}   /* 빈 별은 테두리만 */
 .st i{position:absolute;left:0;top:0;overflow:hidden;color:var(--yolk);font-style:normal;-webkit-text-stroke:.8px color-mix(in srgb,var(--yolk) 60%,var(--ink))}
@@ -444,12 +454,12 @@ dl.keep dd b{display:inline-block;font-size:12px;background:var(--soft);border:1
 .nrow.nsub{padding-left:14px;color:var(--muted);font-size:13px}
 .nhd{font-weight:800;font-size:14px;padding:14px 0 4px}
 .nhd:first-child{padding-top:0}
-.optrow{display:flex;flex-wrap:wrap;gap:8px}
+.optrow{display:flex;flex-wrap:nowrap;gap:8px}
 .dislikes{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
 .dchip{border:1.5px solid var(--line);background:var(--soft);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px}
 .oftenrow{margin-top:10px;align-items:flex-start}
 .tastenote{margin:8px 0 0;font-size:13px;color:var(--muted)}
-.optrow button{flex:1;min-width:88px;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 8px;font-weight:700;font-size:14px}
+.optrow button{flex:1 1 0;min-width:0;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:11px 8px;font-weight:700;font-size:14px}
 .optrow button[aria-checked="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .goalrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .goalrow b{font-family:var(--display);font-weight:400;font-size:24px;font-variant-numeric:tabular-nums}
@@ -557,6 +567,7 @@ function sameIng(g, c){
 const EXAMPLE = ["계란","양파","대파","김치","밥","두부"];
 // 처음 쓰는 사람에게 미리 체크하지 않을 덜 흔한 양념
 const RARE_SEA = ["들기름","올리브유","매실청","유자청","계피가루","파슬리가루","월계수잎","베이킹파우더"];
+const COMMON_SEA = SEASON.filter(x => !RARE_SEA.includes(x));   // 처음에 미리 체크하는 흔한 양념
 
 // [이름, 분, 난이도, 주재료, 있으면 좋은 재료, 양념, 순서, 그림]
 const R = [
@@ -1584,8 +1595,9 @@ function reIngredients(){   // 검색어와 스크롤 위치를 지킨 채 재�
   const nf = fsel && document.querySelector(fsel); if (nf) nf.focus({preventScroll: true});   // 키보드로 바꿨을 때 초점이 맨 위로 튀지 않게
 }
 function updateCounts(){
-  document.querySelectorAll('section[data-g] .cnt').forEach(sm => { const k = sm.closest("section").dataset.g; if (k === "all") { sm.textContent = `${ALL_ING.filter(x => state.sel.includes(x)).length}/${ALL_ING.length}`; return; } const gi = +k, g = GROUPS[gi]; sm.textContent = `${g[1].filter(x=>state.sel.includes(x)).length}/${g[1].length}` + (g[0]==="기본 양념" ? " · 흔한 양념은 미리 체크했어요" : ""); });
-  document.querySelectorAll('.gclr').forEach(bt => { bt.disabled = !gItems(bt.dataset.gclr).some(x => state.sel.includes(x)); });
+  document.querySelectorAll('section[data-g] .cnt').forEach(sm => { const k = sm.closest("section").dataset.g; if (k === "all") { sm.textContent = `${ALL_ING.filter(x => state.sel.includes(x)).length}/${ALL_ING.length}`; return; } const gi = +k, g = GROUPS[gi]; sm.textContent = `${g[1].filter(x=>state.sel.includes(x)).length}/${g[1].length}` ; });
+  document.querySelectorAll('.gclr[data-gclr]').forEach(bt => { bt.disabled = !gItems(bt.dataset.gclr).some(x => state.sel.includes(x)); });
+  document.querySelectorAll('[data-gdef]').forEach(bt => { bt.disabled = COMMON_SEA.every(n => state.sel.includes(n)); });
 }
 function filterTiles(q){
   q = q.trim().replace(/\s+/g, "");
@@ -1620,7 +1632,7 @@ function viewIngredients(){
     ${sortBar()}
     ${state.custom.length ? `<section class="group"><h3>직접 추가한 재료 <small>누르면 빠져요</small></h3><div class="tiles">${customChips}</div></section>` : ""}
     ${state.isort && state.iflat ? `<section class="group" data-g="all"><h3 class="gh"><span class="gt">전체 재료 <small>${state.isort === "desc" ? "ㅎ→ㄱ" : "ㄱ→ㅎ"}</small></span> <small class="cnt">${ALL_ING.filter(n => state.sel.includes(n)).length}/${ALL_ING.length}</small></h3>
-      <div class="tiles">${sortI(ALL_ING).map(tile).join("")}</div></section>` : GROUPS.map(([g, items], gi) => `<section class="group" data-g="${gi}"><h3 class="gh"><span class="gt">${g}</span> <small class="cnt">${items.filter(n=>state.sel.includes(n)).length}/${items.length}${g==="기본 양념"?" · 흔한 양념은 미리 체크했어요":""}</small><button type="button" class="gclr" data-gclr="${gi}" ${items.some(n=>state.sel.includes(n))?"":"disabled"}>재료 선택해제</button></h3>
+      <div class="tiles">${sortI(ALL_ING).map(tile).join("")}</div></section>` : GROUPS.map(([g, items], gi) => `<section class="group" data-g="${gi}"><h3 class="gh"><span class="gt">${g}</span> <small class="cnt">${items.filter(n=>state.sel.includes(n)).length}/${items.length}</small><span class="gbtns">${g==="기본 양념"?`<button type="button" class="gclr gdef" data-gdef="1" ${COMMON_SEA.every(n=>state.sel.includes(n))?"disabled":""}>흔한 양념 체크</button>`:""}<button type="button" class="gclr" data-gclr="${gi}" ${items.some(n=>state.sel.includes(n))?"":"disabled"}>재료 선택해제</button></span></h3>
       <div class="tiles">${sortI(items).map(tile).join("")}</div></section>`).join("")}
     <p class="empty" id="noHit" hidden></p>
     <p class="fblink">앱을 쓰다 불편한 점이 있으면 ${fbLink("✉ 의견 보내기", "")}</p>`;
@@ -1788,6 +1800,7 @@ function renderExt(){
   box.innerHTML = `${head}${rows.length ? rows.map(([c, sub]) => `<section class="xcat" aria-label="${c[2]}">
       <div class="sec"><h3>${c[1]} ${c[2]} <small>${sub.length}</small></h3>${sub.length > 2 ? `<button type="button" class="seeall" data-extcat="${c[0]}">전체<span class="t"> 보기</span> ›</button>` : ""}</div>
       <div class="xrow">${sub.slice(0, 10).map(extCard).join("")}${sub.length > 10 ? `<button type="button" class="xmore" data-extcat="${c[0]}">+${sub.length - 10}<span>전체 보기</span></button>` : ""}</div></section>`).join("") : `<p class="note">이 종류에는 해당하는 요리가 없어요.</p>`}${cred}`;
+  if (backTo) restoreList();
 }
 const kOk = (v, max) => Number.isFinite(v) && v >= 0 && v <= max;
 function extKeep(x){
@@ -1797,7 +1810,7 @@ function extKeep(x){
 }
 function viewExt(seq){
   steps(2); $bar.hidden = true;
-  const back = `<button type="button" class="back" data-go="recipes">← 추천 요리로 돌아가기</button>`;
+  const back = backBtn();
   if (!EXT) { $view.innerHTML = back + `<p class="note">레시피를 불러오는 중…</p>`; loadExt().then(() => { if (location.hash === "#ext-" + seq) viewExt(seq); }); return; }
   if (EXT_ALIAS[seq]) { location.replace("#ext-" + EXT_ALIAS[seq]); return; }
   const x = EXT.find(e => e.s === seq);
@@ -1887,24 +1900,58 @@ function fitOne(){
 }
 window.addEventListener("resize", fitOne);
 /* 짧은 이름·제목은 글자를 조금 줄여서라도 한 줄로 (최소 크기까지 줄여도 안 되면 원래대로 줄바꿈) */
-const FIT = [["#view .tile-n", 10.5], ["#view .card-b strong", 12.5], ["#view .titlerow h2", 19], ["#view .agew .age b", 10.5], ["#view > h2:not(.oneline)", 19], ["#view .yt-h", 12.5]];
+const FIT = [["#view .tile-n", 10.5], ["#view .card-b strong", 12.5], ["#view .titlerow h2", 19], ["#view .agew .age b", 10.5], ["#view .agew .age small", 8], ["#view > h2:not(.oneline)", 19], ["#view .yt-h", 12.5], ["#view .optrow button", 12.5]];
+// 한 줄에 있어야 하는 줄(버튼 묶음): 넘치면 통째로 조금씩 줄이고(최소 50%), 그래도 넘치면 원래처럼 줄바꿈
+const ROWS = ["#topnav", "#barIn", "#view .sortbtns", "#view .who > h3", "#view .alhead", "#steps", "#view .block > h3"];
+// 휴대폰 글꼴 크기 설정(앱 WebView의 글자 확대)이 있으면 지정한 px보다 크게 그려진다. 그 배율을 재서 맞춘다
+const textZoom = () => { try { const p = document.createElement("span"); p.style.cssText = "position:absolute;visibility:hidden;font-size:100px"; document.body.appendChild(p); const v = parseFloat(getComputedStyle(p).fontSize) / 100; p.remove(); return v > 0.5 && v < 4 ? v : 1; } catch(e) { return 1; } };
+const overX = el => el.scrollWidth > el.clientWidth + 1 || [...el.querySelectorAll("*")].some(c => c.scrollWidth > c.clientWidth + (getComputedStyle(c).textOverflow === "ellipsis" ? 0 : 1) && c.getClientRects().length > 0);
+function fitRows(){
+  for (const sel of ROWS) document.querySelectorAll(sel).forEach(el => {
+    el.classList.add("fitrow"); el.classList.remove("fitwrap"); el.style.zoom = ""; el.style.maxWidth = "";
+    if (!el.clientWidth || !overX(el)) return;
+    const mws = getComputedStyle(el).maxWidth, mw = parseFloat(mws), unit = /%$/.test(mws) ? "%" : "px";   // 최대 너비가 있으면 줄인 만큼 넓혀야 실제로 자리가 생긴다
+    let z = 1;
+    while (z > 0.5 && overX(el)) { z = Math.round((z - 0.05) * 100) / 100; el.style.zoom = z; if (mw) el.style.maxWidth = (mw / z) + unit; }
+    if (overX(el)) { el.style.zoom = ""; el.style.maxWidth = ""; el.classList.add("fitwrap"); }
+  });
+}
 function fitText(){
+  const tz = textZoom();
   for (const [sel, min] of FIT) document.querySelectorAll(sel).forEach(el => {
     el.style.fontSize = ""; el.style.width = ""; el.classList.remove("fitx");
     if (el.textContent.trim().length > 22) return;
     el.classList.add("fitx");
     const avail = el.clientWidth; el.style.width = "max-content"; el.style.maxWidth = "none";
-    const rg = document.createRange(); rg.selectNodeContents(el); const nat = Math.max(el.getBoundingClientRect().width, rg.getBoundingClientRect().width); el.style.width = ""; el.style.maxWidth = "";
+    // 앱 '글자 크기'(화면 확대)가 켜져 있으면 화면상 크기와 요소 크기의 단위가 다르다 → 같은 단위로 맞춤
+    const box = el.getBoundingClientRect(), ez = el.offsetWidth ? box.width / el.offsetWidth : 1;
+    const rg = document.createRange(); rg.selectNodeContents(el); const nat = Math.max(box.width, rg.getBoundingClientRect().width) / (ez || 1); el.style.width = ""; el.style.maxWidth = "";
     if (!avail || nat <= avail + 0.5) return;
-    const fs = Math.floor(parseFloat(getComputedStyle(el).fontSize) * (avail - 1) / nat * 4) / 4;
-    if (fs < min) { el.classList.remove("fitx"); return; }
-    el.style.fontSize = fs + "px";
+    const cs = getComputedStyle(el), cur = parseFloat(cs.fontSize);
+    let fs = Math.floor(cur * (avail - 1) / nat * 4) / 4;
+    // 한 줄로는 너무 작아지면 띄어쓰기에서 줄바꿈. 이때 낱말 하나가 칸보다 길면 낱말이 쪼개지지 않을 만큼만 줄인다
+    const wrapFit = () => {
+      el.style.fontSize = ""; el.classList.remove("fitx");
+      try {
+        const cv = fitText.cv || (fitText.cv = document.createElement("canvas").getContext("2d"));
+        cv.font = `${cs.fontWeight} ${cur}px ${cs.fontFamily}`;
+        const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+        const word = Math.max(...el.textContent.trim().split(/\s+/).map(w => cv.measureText(w).width));
+        if (word > avail - pad - 1) el.style.fontSize = (Math.max(9, Math.floor(cur * (avail - pad - 2) / word * 4) / 4) / tz) + "px";
+      } catch(e){}
+    };
+    if (fs < min) { wrapFit(); return; }
+    el.style.fontSize = (fs / tz) + "px";
+    while (el.scrollWidth > el.clientWidth + 0.5 && fs - 0.5 >= min) { fs -= 0.5; el.style.fontSize = (fs / tz) + "px"; }
+    if (el.scrollWidth > el.clientWidth + 0.5) wrapFit();
   });
+  fitRows();
 }
 let fitQ = 0;
 const fitSoon = () => { if (fitQ) return; fitQ = requestAnimationFrame(() => { fitQ = 0; fitText(); }); };
 try { new MutationObserver(fitSoon).observe(document.getElementById("view"), { childList: true, subtree: true }); } catch(e){}
 try { new MutationObserver(fitSoon).observe(document.documentElement, { attributes: true, attributeFilter: ["data-fs"] }); } catch(e){}
+try { new MutationObserver(fitSoon).observe(document.getElementById("topnav"), { childList: true, subtree: true }); new MutationObserver(fitSoon).observe(document.getElementById("barIn"), { childList: true, subtree: true }); new MutationObserver(fitSoon).observe(document.getElementById("steps"), { childList: true, subtree: true }); new MutationObserver(fitSoon).observe(document.getElementById("bar"), { attributes: true, attributeFilter: ["hidden"] }); } catch(e){}
 window.addEventListener("resize", fitSoon);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSoon);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitOne);
@@ -1928,7 +1975,7 @@ function viewRecipe(id){
   const keepItems = [...r.main, ...r.opt].filter(n => KEEP[n] && has(n));
   const keepList = (keepItems.length ? keepItems : r.main.filter(n => KEEP[n]));
   $view.innerHTML = `
-    <button type="button" class="back" data-go="recipes">← 추천 요리로 돌아가기</button>
+    ${backBtn()}
     <article>
       <div class="hero">${art(r.art, r.name)}
         <div class="hero-b"><div class="titlerow"><h2>${r.name}</h2><button type="button" class="favbtn" data-fav="${r.name}" aria-pressed="${fav}">${fav ? "♥ 즐겨찾기" : "♡ 즐겨찾기"}</button></div>
@@ -2637,7 +2684,33 @@ function route(){
   nav(); renderTimers();
 }
 let lastHash = location.hash;
-window.addEventListener("hashchange", () => { route(); if (location.hash !== lastHash) window.scrollTo(0,0); lastHash = location.hash; });
+// 요리 상세에서 목록으로 돌아오면 아까 보던 자리로 (그 요리 카드가 화면에 보이게)
+const listY = {}; let backTo = null;
+let fromList = "recipes";   // 요리를 어느 목록에서 열었는지 (즐겨찾기면 즐겨찾기로 돌아가기)
+function backBtn(){ return fromList === "mine" ? `<button type="button" class="back" data-go="mine">← 즐겨찾기로 돌아가기</button>` : `<button type="button" class="back" data-go="recipes">← 추천 요리로 돌아가기</button>`; }
+function restoreList(){
+  if (!backTo) return false;
+  const c = document.querySelector(`#view [data-go="${backTo.go}"]`);
+  window.scrollTo(0, backTo.y);
+  if (!c) return false;
+  const row = c.closest(".xrow");   // 옆으로 넘기는 줄에 있던 카드면 그 줄도 카드가 보이게
+  if (row) { const a = c.getBoundingClientRect(), w = row.getBoundingClientRect(); if (a.left < w.left || a.right > w.right) row.scrollLeft += a.left - w.left - (w.width - a.width) / 2; }
+  const r = c.getBoundingClientRect();
+  if (r.top < 0 || r.bottom > innerHeight) c.scrollIntoView({ block: "center" });
+  backTo = null; return true;
+}
+window.addEventListener("hashchange", () => {
+  const from = lastHash.replace("#", ""), to = location.hash.replace("#", "");
+  if (/^(recipe|ext)-/.test(to) && !/^(recipe|ext)-/.test(from)) fromList = from === "mine" ? "mine" : "recipes";
+  if (from === "recipes" || from === "mine") listY[from] = window.scrollY;
+  backTo = (to === "recipes" || to === "mine") && /^(recipe|ext)-/.test(from) && listY[to] != null ? { go: from, y: listY[to] } : null;
+  const want = !!backTo;
+  route();
+  if (want) { if (backTo) restoreList(); }   // 목록이 그려지면서 이미 돌아갔을 수도 있다
+  else if (location.hash !== lastHash) window.scrollTo(0,0);
+  lastHash = location.hash;
+  clearTimeout(restoreList.t); if (backTo) restoreList.t = setTimeout(() => { backTo = null; }, 4000);
+});
 
 /* ---------- 오늘 뭐 먹지 룰렛 ---------- */
 let spinning = false;
@@ -2791,6 +2864,10 @@ document.addEventListener("click", e => {
     TIMERS = TIMERS.filter(x => String(x.id) !== b.dataset.tclose); renderTimers();
   } else if (b.dataset.isort !== undefined){
     if (state.isort !== b.dataset.isort) { state.isort = b.dataset.isort; save(); reIngredients(); }
+  } else if (b.dataset.gdef !== undefined){
+    COMMON_SEA.forEach(n => { if (!state.sel.includes(n)) state.sel.push(n); }); state.fresh = false; save();
+    document.querySelectorAll('.tile[data-ing]').forEach(t => t.setAttribute("aria-pressed", state.sel.includes(t.dataset.ing)));
+    updateCounts(); bar();
   } else if (b.dataset.gclr !== undefined){
     const items = gItems(b.dataset.gclr);
     state.sel = state.sel.filter(n => !items.includes(n)); state.fresh = false; save();
