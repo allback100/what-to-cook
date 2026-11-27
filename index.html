@@ -227,7 +227,8 @@ body.has-bar .timers{bottom:92px}
 .nabar i{display:block;height:100%;background:var(--accent)}
 textarea{width:100%;font:inherit;font-size:15px;border:1.5px solid var(--line);border-radius:12px;background:var(--soft);color:var(--ink);padding:10px 12px;resize:vertical}
 textarea:focus{border-color:var(--ink)}
-.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.days button{min-width:0}
 .days button{border:1.5px solid var(--line);background:var(--soft);border-radius:10px;padding:9px 0;font-weight:800}
 .days button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .planact{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -293,6 +294,7 @@ body.cooking .timers{z-index:40;bottom:110px}
 .sortbtns button[aria-checked="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .sortbar .flatchk{font-size:13px;padding:2px}
 .fitrow{flex-wrap:nowrap!important}.fitrow,.fitrow button,.fitrow b,.fitrow small,.fitrow label,.fitrow h3{white-space:nowrap}.fitrow h3{flex-wrap:nowrap}
+.fitrow .gbtns{flex-wrap:nowrap}
 .fitrow.fitwrap{flex-wrap:wrap!important}.fitrow.fitwrap,.fitrow.fitwrap *{white-space:normal}
 .bar-in.fitrow p{min-width:0}.sortbtns.fitrow{max-width:100%;min-width:0;overflow:hidden}
 .gt small{font-size:12px;font-weight:600;color:var(--muted)}
@@ -313,6 +315,7 @@ a.fbbtn{display:block;text-align:center;text-decoration:none}
 @media(max-width:340px){.bar-in{gap:8px}.clearbtn{padding:10px 8px;font-size:12px}.bar .cta{padding:14px 12px;font-size:15px}}
 .cta{border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:16px;padding:14px 20px;white-space:nowrap}
 .cta:disabled{opacity:.45;cursor:not-allowed}
+.cta.wide,.sharegrid .cta{white-space:normal}   /* 화면 폭 전체 버튼은 글씨가 아주 크면 두 줄로 */
 
 /* 추천 */
 .sec{display:flex;align-items:baseline;justify-content:space-between;margin:22px 0 10px}
@@ -1656,6 +1659,12 @@ function card(m){
 let EXT = null, extLoading = null, extShown = 12, extType = "all", extCat = null;
 // 데이터 정리로 합쳐진 레시피 번호(x.a)에 저장된 즐겨찾기·메모·기록을 남은 번호로 옮긴다
 let EXT_ALIAS = {};
+// 식품안전나라 원본의 이름·사진이 내용과 안 맞는 레시피 보정 (사진은 라이선스 확인한 Wikimedia Commons 사진)
+const EXT_FIX = {
+  37: { n: "부드러운 된장국(갈아 만든)" },   // 재료를 믹서에 갈아 넣는 하얀 된장국
+  3067: { pc: ["Ugeoji-doenjang-guk.jpg", "Scudsvlad", "CC BY-SA 4.0"] }   // 원본 사진은 재료만 찍힌 사진
+};
+function fixExt(x){ const f = EXT_FIX[x.s]; if (!f) return x; if (f.n) x.n = f.n; if (f.pc) { x.pc = f.pc; x.p = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(f.pc[0])}?width=640`; } return x; }
 function migrateExtKeys(){
   EXT_ALIAS = {};
   EXT.forEach(x => (Array.isArray(x.a) ? x.a : []).forEach(o => { if (Number.isFinite(o)) EXT_ALIAS[o] = x.s; }));
@@ -1674,7 +1683,7 @@ function loadExt(){
   if (location.protocol === "file:") { EXT = []; return Promise.resolve(EXT); }
   if (!extLoading) extLoading = fetch("recipes.json", {cache: "no-cache"})
     .then(r => r.ok ? r.json() : [])
-    .then(d => { EXT = (Array.isArray(d) ? d : []).filter(x => x && typeof x.n === "string" && Array.isArray(x.i) && Array.isArray(x.m) && Number.isFinite(x.s)); migrateExtKeys(); return EXT; })
+    .then(d => { EXT = (Array.isArray(d) ? d : []).filter(x => x && typeof x.n === "string" && Array.isArray(x.i) && Array.isArray(x.m) && Number.isFinite(x.s)).map(fixExt); migrateExtKeys(); return EXT; })
     .catch(() => { EXT = []; return EXT; });
   return extLoading;
 }
@@ -1831,7 +1840,7 @@ function viewExt(seq){
         <div class="hero-b"><div class="titlerow"><h2>${esc(x.n)}</h2><button type="button" class="favbtn" data-fav="${key}" aria-pressed="${fav}">${fav ? "♥ 즐겨찾기" : "♡ 즐겨찾기"}</button></div>
           ${log.length ? `<span class="made">지난번 만든 날 ${md(log[log.length-1])}(${daysAgo(log[log.length-1])}) · ${log.length}번 만들었어요</span>` : ""}
           <span class="meta">${esc([x.t, x.w].filter(Boolean).join(" · "))}${x.m.length ? ` · ${x.m.length}단계` : ""}</span>
-          <p class="note cred">레시피·사진: 식품의약품안전처 <a href="https://www.foodsafetykorea.go.kr/" target="_blank" rel="noopener">식품안전나라</a> · 공공데이터</p>
+          ${x.pc ? `<p class="note cred">레시피: 식품의약품안전처 <a href="https://www.foodsafetykorea.go.kr/" target="_blank" rel="noopener">식품안전나라</a> · 공공데이터<br>사진: ${esc(x.pc[1])} · ${esc(x.pc[2])} · <a href="https://commons.wikimedia.org/wiki/File:${encodeURIComponent(x.pc[0])}" target="_blank" rel="noopener">Wikimedia Commons</a></p>` : `<p class="note cred">레시피·사진: 식품의약품안전처 <a href="https://www.foodsafetykorea.go.kr/" target="_blank" rel="noopener">식품안전나라</a> · 공공데이터</p>`}
           ${sc.got.length ? `<span class="pill ok">내 재료 ${esc(sc.got.slice(0, 4).join(", "))}${sc.got.length > 4 ? " 외" : ""} 사용</span>` : ""}
         </div></div>
       ${kidAge() ? `<p class="agenote"><b>연령 확인 필요</b> 이 레시피는 연령 정보가 없어요. ${AGES[state.age][0]}에게 줄 때는 맵기·간·크기와 질식 위험 재료를 꼭 확인하세요.${extSpicy(x) ? " <b>매운 재료가 들어 있어요.</b>" : ""}${state.age === 0 ? " 이유식으로는 권하지 않아요." : ""}</p>` : ""}
@@ -1900,9 +1909,9 @@ function fitOne(){
 }
 window.addEventListener("resize", fitOne);
 /* 짧은 이름·제목은 글자를 조금 줄여서라도 한 줄로 (최소 크기까지 줄여도 안 되면 원래대로 줄바꿈) */
-const FIT = [["#view .tile-n", 10.5], ["#view .card-b strong", 12.5], ["#view .titlerow h2", 19], ["#view .agew .age b", 10.5], ["#view .agew .age small", 8], ["#view > h2:not(.oneline)", 19], ["#view .yt-h", 12.5], ["#view .optrow button", 12.5]];
+const FIT = [["#view .tile-n", 10.5], ["#view .nut b", 11], ["#view .gh .gt", 12], ["#view .days button", 9], ["#view .card-b strong", 12.5], ["#view .titlerow h2", 19], ["#view .agew .age b", 10.5], ["#view .agew .age small", 8], ["#view > h2:not(.oneline)", 19], ["#view .yt-h", 12.5], ["#view .optrow button", 12.5]];
 // 한 줄에 있어야 하는 줄(버튼 묶음): 넘치면 통째로 조금씩 줄이고(최소 50%), 그래도 넘치면 원래처럼 줄바꿈
-const ROWS = ["#topnav", "#barIn", "#view .sortbtns", "#view .who > h3", "#view .alhead", "#steps", "#view .block > h3"];
+const ROWS = ["#topnav", "#barIn", "#view .sortbtns", "#view .who > h3", "#view .alhead", "#steps", "#view .block > h3", "#view .gh"];
 // 휴대폰 글꼴 크기 설정(앱 WebView의 글자 확대)이 있으면 지정한 px보다 크게 그려진다. 그 배율을 재서 맞춘다
 const textZoom = () => { try { const p = document.createElement("span"); p.style.cssText = "position:absolute;visibility:hidden;font-size:100px"; document.body.appendChild(p); const v = parseFloat(getComputedStyle(p).fontSize) / 100; p.remove(); return v > 0.5 && v < 4 ? v : 1; } catch(e) { return 1; } };
 const overX = el => el.scrollWidth > el.clientWidth + 1 || [...el.querySelectorAll("*")].some(c => c.scrollWidth > c.clientWidth + (getComputedStyle(c).textOverflow === "ellipsis" ? 0 : 1) && c.getClientRects().length > 0);
@@ -1945,7 +1954,18 @@ function fitText(){
     while (el.scrollWidth > el.clientWidth + 0.5 && fs - 0.5 >= min) { fs -= 0.5; el.style.fontSize = (fs / tz) + "px"; }
     if (el.scrollWidth > el.clientWidth + 0.5) wrapFit();
   });
-  fitRows();
+  fitRows(); fitPh();
+}
+// 검색칸 안내 글자가 칸보다 길면 잘리지 않게 짧은 문구로
+const PH = { addInput: ["재료 검색 (예: 계란, 삼겹살)", "재료 검색 (예: 계란)", "재료 검색"] };
+function fitPh(){
+  for (const [id, list] of Object.entries(PH)) { const el = document.getElementById(id); if (!el || !el.clientWidth || el.value) continue;
+    // 글자를 잠깐 칸에 넣어 보고 넘치는지 직접 잰다 (검색칸 지우기 버튼 자리·글꼴 확대까지 그대로 반영)
+    let pick = list[list.length - 1];
+    for (const t of list) { el.value = t; if (el.scrollWidth <= el.clientWidth - 6) { pick = t; break; } }
+    el.value = "";
+    if (el.placeholder !== pick) el.placeholder = pick;
+  }
 }
 let fitQ = 0;
 const fitSoon = () => { if (fitQ) return; fitQ = requestAnimationFrame(() => { fitQ = 0; fitText(); }); };
@@ -1955,6 +1975,11 @@ try { new MutationObserver(fitSoon).observe(document.getElementById("topnav"), {
 window.addEventListener("resize", fitSoon);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSoon);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitOne);
+// 앱을 켠 채로 휴대폰 글꼴 크기를 바꾸면 크기 바뀜 이벤트가 없다 → 돌아왔을 때와 2초마다 배율을 확인해서 다시 맞춘다
+let lastTZ = 0;
+const tzCheck = () => { if (document.hidden) return; const t = textZoom(); if (lastTZ && Math.abs(t - lastTZ) > 0.01) { fitOne(); fitSoon(); } lastTZ = t; };
+document.addEventListener("visibilitychange", tzCheck); window.addEventListener("pageshow", tzCheck); window.addEventListener("focus", tzCheck);
+{ const t = setInterval(tzCheck, 2000); if (t && t.unref) t.unref(); }
 
 function viewRecipe(id){
   const r = RECIPES.find(x => x.id === id); if (!r) return viewRecipes();
