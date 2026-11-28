@@ -1622,7 +1622,8 @@ function filterTiles(q){
     let vis = 0;
     sec.querySelectorAll(".tile[data-ing]").forEach(t => {
       const n = t.dataset.ing;
-      const ok = !q || n.includes(q) || Object.keys(SYN).some(a => SYN[a] === n && a.includes(q));
+      // 이름에 들어 있으면 보여 주고, 다른 이름(동의어)은 그 이름의 절반 넘게 쳤을 때만 찾는다 ('양' → 양송이 때문에 버섯이 나오지 않게, '양송' → 버섯)
+      const ok = !q || n.includes(q) || Object.keys(SYN).some(a => SYN[a] === n && a.includes(q) && q.length * 2 > a.length);
       t.hidden = !ok; if (ok) vis++;
     });
     sec.hidden = (q && sec.dataset.g === "recent") || vis === 0;
